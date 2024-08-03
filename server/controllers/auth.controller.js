@@ -1,5 +1,6 @@
 const bcrypt = require("bcrypt");
 const User = require("../models/users.model.js");
+const generateToken = require("../utils/generateToken.js");
 
 class authController {
   // [POST] /auth/login
@@ -20,8 +21,9 @@ class authController {
       err.message = "Invalid username or password";
       return res.status(401).json(err);
     }
-
-    res.status(200).json(user);
+    const token = generateToken(user);
+    res.cookie("token", token, { maxAge: 60 * 60 * 1000 });
+    res.status(200).json(token);
   }
 
   // [POST] /auth/signup
