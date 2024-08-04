@@ -13,12 +13,12 @@ class authController {
     }
     const user = await User.findOne({ username });
     if (!user) {
-      err.message = "Invalid username or password";
+      err.message = "Invalid username";
       return res.status(401).json(err);
     }
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      err.message = "Invalid username or password";
+      err.message = "Invalid password";
       return res.status(401).json(err);
     }
     const token = generateToken(user);
