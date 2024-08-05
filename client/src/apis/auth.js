@@ -25,6 +25,34 @@ export const loginUser = async (username, password) => {
     }
   }
 };
+export const signupUser = async (
+  username,
+  email,
+  password,
+  gender,
+  full_name,
+  confirm_password
+) => {
+  try {
+    return await axios.post(`${api}/auth/signup`, {
+      username,
+      email,
+      password,
+      gender,
+      full_name,
+      confirm_password,
+    });
+  } catch (error) {
+    if (error.response) {
+      return {
+        message: error.response.data.message,
+        status: error.response.status,
+      };
+    } else {
+      console.error(error);
+    }
+  }
+};
 export const validUser = async () => {
   try {
     const token = localStorage.getItem("token");
