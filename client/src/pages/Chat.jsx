@@ -1,17 +1,27 @@
-import axios from "axios";
+import { Container, CssBaseline, Grid, Divider } from "@mui/material";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 
+import MessageContainer from "../components/messages/MessageContainer";
+import SidebarContainer from "../components/sidebar/SidebarContainer";
 export default function Chat() {
-  const handleLogout = async () => {
-    try {
-      await axios.post(`${import.meta.env.VITE_SERVER_URL}/auth/logout`);
-      // Remove the token from local storage or cookie
-      localStorage.removeItem("token");
-      // Redirect the user to the login page or the home page
-      window.location.href = "/login";
-    } catch (err) {
-      console.error("Error logging out:", err);
-    }
-  };
+  const defaultTheme = createTheme();
 
-  return <button onClick={handleLogout}>Logout</button>;
+  return (
+    <>
+      <ThemeProvider theme={defaultTheme}>
+        <Container component="main" maxWidth="lg">
+          <CssBaseline />
+          <Grid container spacing={0}>
+            <Grid item xs={0} sm={4}>
+              <SidebarContainer />
+            </Grid>
+            <Divider />
+            <Grid item xs={12} sm={8}>
+              <MessageContainer />
+            </Grid>
+          </Grid>
+        </Container>
+      </ThemeProvider>
+    </>
+  );
 }
