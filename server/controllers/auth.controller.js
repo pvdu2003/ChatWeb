@@ -22,6 +22,7 @@ class authController {
       return res.status(401).json(err);
     }
     const token = generateToken(user);
+    res.setHeader("Authorization", `Bearer ${token}`);
     res.cookie("token", token, { maxAge: 60 * 60 * 1000 });
     res.status(200).json(token);
   }
@@ -69,6 +70,15 @@ class authController {
     } catch (err) {
       console.error("Error in signup handler", err);
       res.status(500).json(err);
+    }
+  }
+  // [POST] /auth/logout
+  async logout(req, res, next) {
+    try {
+      res.clearCookie("token");
+      res.status(200).json({ message: "Logged out successfully" });
+    } catch (err) {
+      next(err);
     }
   }
 }

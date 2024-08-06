@@ -102,6 +102,14 @@ function Login() {
               >
                 Login
               </Button>
+              <Link
+                href={`${import.meta.env.VITE_SERVER_URL}/auth/google`}
+                className="btn active text-decoration-none w-100 mb-2"
+                data-bs-toggle="button"
+                aria-pressed="true"
+              >
+                Login with Google
+              </Link>
               <Grid container>
                 <Grid item xs>
                   <Link href="#" variant="body2">
