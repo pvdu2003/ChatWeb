@@ -1,7 +1,8 @@
 import axios from "axios";
-import { Avatar, Box, IconButton } from "@mui/material";
-import LockOpenIcon from "@mui/icons-material/LockOpen";
+import { Box, IconButton } from "@mui/material";
 import LogoutIcon from "@mui/icons-material/Logout";
+import SearchInput from "./SearchInput";
+import ConversationList from "./ConversationList";
 export default function SidebarContainer() {
   const handleLogout = async () => {
     try {
@@ -14,21 +15,86 @@ export default function SidebarContainer() {
       console.error("Error logging out:", err);
     }
   };
+  const list = [
+    {
+      name: "User 1",
+      lastMessage: "Hello, how are you?",
+    },
+    {
+      name: "User 1",
+      lastMessage: "He you?",
+    },
+    {
+      name: "User 5",
+      lastMessage: "Hello, hoyou?",
+    },
+    {
+      name: "User 21",
+      lastMessage: "Hello, hoyou?",
+    },
+    {
+      name: "User 1",
+      lastMessage: "Hello, how are you?",
+    },
+    {
+      name: "User 1",
+      lastMessage: "He you?",
+    },
+    {
+      name: "User 5",
+      lastMessage: "Hello, hoyou?",
+    },
+    {
+      name: "User 21",
+      lastMessage: "Hello, hoyou?",
+    },
+    {
+      name: "User 1",
+      lastMessage: "Hello, how are you?",
+    },
+    {
+      name: "User 1",
+      lastMessage: "He yoello, how are you?u?",
+    },
+    {
+      name: "User 5",
+      lastMessage: "Hello, hoyou?",
+    },
+    {
+      name: "User 21",
+      lastMessage: "Helloello, how are you?, hoyou?",
+    },
+    {
+      name: "User 1",
+      lastMessage: "Helello, how are you?lo, how are you?",
+    },
+    {
+      name: "User 1",
+      lastMessage: "He yello, how are you?ou?",
+    },
+    {
+      name: "User 5",
+      lastMessage: "Hello, hoyou?",
+    },
+    {
+      name: "User 21",
+      lastMessage: "Hello, hello, how are you?oyou?",
+    },
+  ];
   return (
     <Box
       sx={{
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        justifyContent: "center",
+        justifyContent: "between",
         minHeight: "100vh",
         bgcolor: "background.default",
         p: 2,
       }}
     >
-      <Avatar sx={{ bgcolor: "secondary.main" }}>
-        <LockOpenIcon />
-      </Avatar>
+      <SearchInput />
+      <ConversationList list={list} />
       <IconButton onClick={handleLogout}>
         <LogoutIcon />
       </IconButton>
