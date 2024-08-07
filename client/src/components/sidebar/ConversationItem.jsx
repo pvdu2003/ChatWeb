@@ -10,9 +10,7 @@ export default function ConversationItem({ name, lastMessage }) {
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "between",
-        paddingY: 2,
-        paddingX: 1,
-        width: "100%",
+        padding: 1,
       }}
     >
       <Avatar src="https://avatar.iran.liara.run/public/boy?username=david" />
@@ -26,7 +24,6 @@ export default function ConversationItem({ name, lastMessage }) {
   );
 }
 ConversationItem.propTypes = {
-  id: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
   lastMessage: PropTypes.string.isRequired,
 };

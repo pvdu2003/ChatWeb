@@ -1,6 +1,8 @@
 import Box from "@mui/material/Box";
+
 import MessageInput from "./MessageInput";
 import MessageList from "./MessageList";
+import MessageHeader from "./MessageHeader";
 
 export default function MessageContainer() {
   const messages = [
@@ -30,11 +32,13 @@ export default function MessageContainer() {
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-        minHeight: "100vh",
+        maxHeight: "100vh",
         bgcolor: "background.default",
-        p: 2,
+        px: 2,
+        position: "relative",
       }}
     >
+      <MessageHeader />
       <MessageList messages={messages} />
       <MessageInput />
     </Box>

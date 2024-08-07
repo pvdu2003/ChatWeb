@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 
-import { Grid, Box, ListItem, ListItemText } from "@mui/material";
+import { Grid, Box, ListItem, ListItemText, Tooltip } from "@mui/material";
 
 export default function MessageItem({ index, message }) {
   return (
@@ -14,21 +14,23 @@ export default function MessageItem({ index, message }) {
           container
           justifyContent={index % 5 === 0 ? "flex-start" : "flex-end"}
         >
-          <Box
-            sx={{
-              backgroundColor: index % 5 === 0 ? "pink" : "blue",
-              paddingX: "0.75rem",
-              paddingY: "0.25rem",
-              borderRadius:
-                index % 5 === 0 ? "10px 10px 10px 0" : "10px 10px 0 10px",
-              color: "white",
-              textAlign: "left",
-              width: "fit-content",
-              maxWidth: 400,
-            }}
-          >
-            <ListItemText>{message}</ListItemText>
-          </Box>
+          <Tooltip title="Add" placement="left">
+            <Box
+              sx={{
+                backgroundColor: index % 5 === 0 ? "pink" : "blue",
+                paddingX: "0.75rem",
+                paddingY: "0.25rem",
+                borderRadius:
+                  index % 5 === 0 ? "10px 10px 10px 0" : "10px 10px 0 10px",
+                color: "white",
+                textAlign: "left",
+                width: "fit-content",
+                maxWidth: "18rem",
+              }}
+            >
+              <ListItemText>{message}</ListItemText>
+            </Box>
+          </Tooltip>
         </Grid>
       </Grid>
     </ListItem>

@@ -10,6 +10,8 @@ export default function SearchInput() {
         display: "flex",
         alignItems: "center",
         width: "100%",
+        position: "sticky",
+        zIndex: 100,
       }}
     >
       <InputBase sx={{ ml: 1, flex: 1 }} placeholder="Search Chat" />

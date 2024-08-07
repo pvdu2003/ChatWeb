@@ -21,40 +21,29 @@ export default function MessageInput() {
     <Box
       sx={{
         display: "flex",
-        flexDirection: "column",
-        alignItems: "stretch",
+        alignItems: "center",
+        bgcolor: "background.paper",
         width: "100%",
-        border: "1px solid",
-        borderColor: "divider",
-        borderRadius: 2,
-        overflow: "hidden",
-        mb: 4,
+        position: "sticky",
+        bottom: 0,
+        mb: 2.5,
       }}
     >
-      <Box
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          bgcolor: "background.paper",
-          p: 1.5,
-        }}
+      <TextField
+        variant="outlined"
+        placeholder="Type your message..."
+        value={newMessage}
+        onChange={handleMessageChange}
+        sx={{ flexGrow: 1, mr: 2 }}
+        size="small"
+      />
+      <Button
+        variant="contained"
+        endIcon={<SendIcon />}
+        onClick={handleSendMessage}
       >
-        <TextField
-          variant="outlined"
-          placeholder="Type your message..."
-          value={newMessage}
-          onChange={handleMessageChange}
-          sx={{ flexGrow: 1, mr: 2 }}
-          size="small"
-        />
-        <Button
-          variant="contained"
-          endIcon={<SendIcon />}
-          onClick={handleSendMessage}
-        >
-          Send
-        </Button>
-      </Box>
+        Send
+      </Button>
     </Box>
   );
 }
