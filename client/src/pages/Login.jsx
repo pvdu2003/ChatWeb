@@ -13,6 +13,7 @@ import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { loginUser } from "../apis/auth";
+import { useAuthContext } from "../context/AuthContext";
 function Login() {
   const defaultTheme = createTheme();
   const pageRoute = useNavigate();
@@ -21,6 +22,7 @@ function Login() {
     username: "",
     password: "",
   };
+  const { setAuthUser } = useAuthContext();
   const [formData, setFormData] = useState(defaultData);
   const [message, setMessage] = useState("");
   const handleOnChange = (e) => {
@@ -36,7 +38,8 @@ function Login() {
       setMessage(resp.message);
     } else {
       localStorage.setItem("token", resp.data);
-      pageRoute("/chat");
+      setAuthUser(resp.data);
+      pageRoute("/");
     }
   };
   useEffect(() => {
