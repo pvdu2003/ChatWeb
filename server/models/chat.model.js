@@ -14,10 +14,12 @@ const chatSchema = new Schema(
         ref: "users",
       },
     ],
-    latest_message: {
-      type: objectId,
-      ref: "message",
-    },
+    messages: [
+      {
+        type: objectId,
+        ref: "message",
+      },
+    ],
     group_admin: [
       {
         type: objectId,

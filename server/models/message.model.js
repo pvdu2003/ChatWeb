@@ -7,7 +7,6 @@ const messageSchema = new Schema(
     _id: { type: objectId, auto: true },
     sender_id: { type: objectId, ref: "users" },
     message: { type: String },
-    chat_id: { type: objectId, ref: "chats" },
   },
   {
     versionKey: false,
