@@ -10,6 +10,7 @@ export const getById = async (id) => {
   try {
     const token = localStorage.getItem("token");
     const response = await API(token).get(`/chat/${id}`);
+    console.log(response.data);
 
     return response.data;
   } catch (error) {

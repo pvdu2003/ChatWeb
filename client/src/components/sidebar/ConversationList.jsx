@@ -1,9 +1,24 @@
-import PropTypes from "prop-types";
+// import PropTypes from "prop-types";
 import { Box } from "@mui/material";
-
+import { useEffect, useState } from "react";
+import { getAll } from "../../apis/chat";
 import ConversationItem from "./ConversationItem";
 
-export default function ConversationList({ list }) {
+export default function ConversationList() {
+  const [list, setList] = useState([]);
+  const fetchAllChat = async () => {
+    try {
+      const data = await getAll();
+      console.log(data);
+
+      setList(data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  useEffect(() => {
+    fetchAllChat();
+  }, []);
   return (
     <Box
       sx={{
@@ -19,11 +34,3 @@ export default function ConversationList({ list }) {
     </Box>
   );
 }
-ConversationList.propTypes = {
-  list: PropTypes.arrayOf(
-    PropTypes.shape({
-      users: PropTypes.array.isRequired,
-      lastMessage: PropTypes.string.isRequired,
-    })
-  ).isRequired,
-};
