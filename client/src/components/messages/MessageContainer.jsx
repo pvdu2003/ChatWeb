@@ -1,30 +1,26 @@
+import { useState, useEffect } from "react";
 import Box from "@mui/material/Box";
 
 import MessageInput from "./MessageInput";
 import MessageList from "./MessageList";
 import MessageHeader from "./MessageHeader";
-
+import { getById } from "../../apis/chat";
 export default function MessageContainer() {
-  const messages = [
-    "Hi b oirej biajo bjareo bajr bajr ",
-    "John Dvafvajbajrfb",
-    "Hello",
-    "Hi",
-    "Johnbabab ji reijb obajiorob",
-    "Hello",
-    "Hi",
-    "John jibaer bajer brjao bjb oirej biajo bjareo bajr bajr bojar ojbaro ebjao ba",
-    "Hello",
-    "Hi",
-    "Johnb oirej biajo bjareo bajr bajr ",
-    "Hello",
-    "Hi",
-    "John",
-    "Hello",
-    "Hi b oirej biajo bjareo bajr bajr b oirej biajo bjareo bajr bajr ",
-    "John",
-    "Hello",
-  ];
+  const [messages, setMessages] = useState([]);
+
+  const fetchChat = async () => {
+    try {
+      const data = await getById("66bcb52e18294eb9483320a7");
+      console.log(data.messages);
+      setMessages(data.messages);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchChat();
+  }, []);
   return (
     <Box
       sx={{

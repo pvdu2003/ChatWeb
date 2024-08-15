@@ -10,11 +10,10 @@ const route = require("./routes/main.route");
 
 const db = require("./config/db");
 const port = process.env.PORT || 3000;
-// const corsOptions = {
-//   origin: process.env.BASE_URL,
-//   credentials: true,
-//   optionsSuccessStatus: 200,
-// };
+const corsOptions = {
+  origin: process.env.CLIENT_URL,
+  credentials: true,
+};
 // Connect to MongoDB
 db.connect();
 const app = express();
@@ -31,7 +30,7 @@ app.use(express.urlencoded({ extends: true }));
 app.use(cookieParser());
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(cors());
+app.use(cors(corsOptions));
 route(app);
 app.listen(port, () => {
   console.log(`App is running on port ${port}`);

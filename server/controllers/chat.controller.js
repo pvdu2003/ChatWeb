@@ -15,10 +15,20 @@ class chatController {
         message: "You are not in this chat or this chat is not exist!",
       });
     }
-    const chat = await Message.find({ chat_id }).populate({
-      path: "sender_id",
-      select: "-password -email -gender",
-    });
+    const chat = await Chat.findById(chat_id)
+      .populate({
+        path: "users",
+        select: "-password -email -gender",
+      })
+      .populate({
+        path: "messages",
+        populate: {
+          path: "sender_id",
+          select: "-password -email -gender",
+        },
+        options: { sort: { createdAt: 1 } },
+      });
+    console.log(chat);
 
     res.status(200).json(chat);
   }

@@ -22,5 +22,13 @@ export default function MessageList({ messages }) {
 }
 
 MessageList.propTypes = {
-  messages: PropTypes.arrayOf(PropTypes.string).isRequired,
+  messages: PropTypes.arrayOf(
+    PropTypes.shape({
+      _id: PropTypes.string.isRequired,
+      sender_id: PropTypes.object.isRequired,
+      message: PropTypes.string.isRequired,
+      createdAt: PropTypes.string.isRequired,
+      updatedAt: PropTypes.string.isRequired,
+    })
+  ).isRequired,
 };

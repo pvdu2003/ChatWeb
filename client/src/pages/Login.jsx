@@ -34,11 +34,14 @@ function Login() {
     const username = data.get("username");
     const password = data.get("password");
     const resp = await loginUser(username, password);
+    console.log(resp);
+
     if (resp.message) {
       setMessage(resp.message);
     } else {
-      localStorage.setItem("token", resp.data);
-      setAuthUser(resp.data);
+      localStorage.setItem("user", JSON.stringify(resp));
+      localStorage.setItem("token", resp.token);
+      setAuthUser(resp);
       pageRoute("/");
     }
   };

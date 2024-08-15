@@ -10,10 +10,16 @@ const API = (token) =>
 const api = import.meta.env.VITE_SERVER_URL;
 export const loginUser = async (username, password) => {
   try {
-    return await axios.post(`${api}/auth/login`, {
-      username,
-      password,
-    });
+    const resp = await axios.post(
+      `${api}/auth/login`,
+      {
+        username,
+        password,
+      },
+      { withCredentials: true }
+    );
+    const data = await resp.data;
+    return data;
   } catch (error) {
     if (error.response) {
       return {
