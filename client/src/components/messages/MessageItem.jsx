@@ -2,24 +2,27 @@ import PropTypes from "prop-types";
 
 import { Grid, Box, ListItem, ListItemText, Tooltip } from "@mui/material";
 import { useAuthContext } from "../../context/AuthContext";
+import { extractTime } from "../../utils/extractTime";
 export default function MessageItem({ index, message }) {
   const { authUser } = useAuthContext();
   const fromMe = authUser._id === message.sender_id._id;
+  const formattedTime = extractTime(message.createdAt);
+
   return (
     <ListItem key={index} sx={{ padding: [0, 0.2] }}>
-      <Grid container justifyContent={fromMe ? "flex-start" : "flex-end"}>
+      <Grid container justifyContent={!fromMe ? "flex-start" : "flex-end"}>
         <Grid
           item
           container
-          justifyContent={fromMe ? "flex-start" : "flex-end"}
+          justifyContent={!fromMe ? "flex-start" : "flex-end"}
         >
-          <Tooltip title="Add" placement="left">
+          <Tooltip title={formattedTime} arrow placement="left">
             <Box
               sx={{
-                backgroundColor: fromMe ? "pink" : "blue",
+                backgroundColor: !fromMe ? "pink" : "blue",
                 paddingX: "0.75rem",
                 paddingY: "0.25rem",
-                borderRadius: fromMe ? "10px 10px 10px 0" : "10px 10px 0 10px",
+                borderRadius: !fromMe ? "10px 10px 10px 0" : "10px 10px 0 10px",
                 color: "white",
                 textAlign: "left",
                 width: "fit-content",

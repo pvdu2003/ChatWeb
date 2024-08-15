@@ -10,7 +10,7 @@ export const useAuthContext = () => {
 
 export const AuthContextProvider = ({ children }) => {
   const [authUser, setAuthUser] = useState(
-    localStorage.getItem("token") || null
+    JSON.parse(localStorage.getItem("user")) || null
   );
 
   return (

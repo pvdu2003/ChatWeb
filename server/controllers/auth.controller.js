@@ -23,7 +23,11 @@ class authController {
     }
     const token = generateToken(user);
     res.setHeader("Authorization", `Bearer ${token}`);
-    res.cookie("token", token, { maxAge: 60 * 60 * 1000 });
+    res.cookie("token", token, {
+      maxAge: 12 * 60 * 60 * 1000,
+      httpOnly: true,
+      secure: true,
+    });
     res.status(200).json({
       _id: user._id,
       full_name: user.full_name,

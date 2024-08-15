@@ -7,11 +7,12 @@ import MessageHeader from "./MessageHeader";
 import { getById } from "../../apis/chat";
 export default function MessageContainer() {
   const [messages, setMessages] = useState([]);
+  const [users, setUsers] = useState([]);
 
   const fetchChat = async () => {
     try {
       const data = await getById("66bcb52e18294eb9483320a7");
-      console.log(data.messages);
+      setUsers(data.users);
       setMessages(data.messages);
     } catch (error) {
       console.error(error);
@@ -34,7 +35,7 @@ export default function MessageContainer() {
         position: "relative",
       }}
     >
-      <MessageHeader />
+      <MessageHeader users={users} />
       <MessageList messages={messages} />
       <MessageInput />
     </Box>
