@@ -1,4 +1,3 @@
-// import PropTypes from "prop-types";
 import { Box } from "@mui/material";
 import { useEffect, useState } from "react";
 import { getAll } from "../../apis/chat";
@@ -9,8 +8,6 @@ export default function ConversationList() {
   const fetchAllChat = async () => {
     try {
       const data = await getAll();
-      console.log(data);
-
       setList(data);
     } catch (error) {
       console.error(error);

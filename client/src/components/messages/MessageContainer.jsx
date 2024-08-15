@@ -26,6 +26,7 @@ export default function MessageContainer() {
 
   useEffect(() => {
     fetchChat();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currChat]);
   return (
     <>
