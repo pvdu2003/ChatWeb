@@ -22,7 +22,7 @@ export default function ConversationList({ list }) {
 ConversationList.propTypes = {
   list: PropTypes.arrayOf(
     PropTypes.shape({
-      name: PropTypes.string.isRequired,
+      users: PropTypes.array.isRequired,
       lastMessage: PropTypes.string.isRequired,
     })
   ).isRequired,

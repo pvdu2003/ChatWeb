@@ -16,3 +16,13 @@ export const getById = async (id) => {
     console.error(error);
   }
 };
+export const getAll = async () => {
+  try {
+    const token = localStorage.getItem("token");
+    const response = await API(token).get("/chat/all");
+
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};

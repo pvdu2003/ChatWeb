@@ -1,8 +1,11 @@
 import PropTypes from "prop-types";
 
 import { Avatar, Box } from "@mui/material";
+import { useAuthContext } from "../../context/AuthContext";
+export default function ConversationItem({ users, lastMessage }) {
+  const { authUser } = useAuthContext();
+  const receivers = users.filter((user) => user._id !== authUser._id);
 
-export default function ConversationItem({ name, lastMessage }) {
   return (
     <Box
       sx={{
@@ -13,9 +16,9 @@ export default function ConversationItem({ name, lastMessage }) {
         padding: 1,
       }}
     >
-      <Avatar src="https://avatar.iran.liara.run/public/boy?username=david" />
+      <Avatar src={receivers[0]?.avatar} />
       <Box sx={{ paddingLeft: 1 }}>
-        <p className="m-0 fw-bold">{name}</p>
+        <p className="m-0 fw-bold">{receivers[0]?.full_name}</p>
         <p className="m-0 text-truncate" style={{ maxWidth: "14rem" }}>
           {lastMessage}
         </p>
@@ -24,6 +27,6 @@ export default function ConversationItem({ name, lastMessage }) {
   );
 }
 ConversationItem.propTypes = {
-  name: PropTypes.string.isRequired,
+  users: PropTypes.array.isRequired,
   lastMessage: PropTypes.string.isRequired,
 };
