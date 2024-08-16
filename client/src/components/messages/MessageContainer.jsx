@@ -35,16 +35,19 @@ export default function MessageContainer() {
           sx={{
             display: "flex",
             flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-            maxHeight: "100vh",
+            height: "100vh",
             bgcolor: "background.default",
             px: 2,
-            position: "relative",
           }}
         >
           <MessageHeader users={users} />
-          <MessageList messages={messages} />
+          <Box
+            sx={{
+              flexGrow: 1,
+            }}
+          >
+            <MessageList messages={messages} />
+          </Box>
           <MessageInput />
         </Box>
       ) : (
