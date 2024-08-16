@@ -8,7 +8,7 @@ const API = (token) =>
   });
 export const sendMessage = async (currChat, message) => {
   try {
-    const token = localStorage.getItem("token");
+    const token = sessionStorage.getItem("token");
     const response = await API(token).post(`/message/send`, {
       chat_id: currChat,
       message: message,

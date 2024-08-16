@@ -25,9 +25,15 @@ export default function ConversationList() {
         mt: 1,
       }}
     >
-      {Object.values(list).map((item, index) => (
-        <ConversationItem key={index} {...item} />
-      ))}
+      {list.length > 0 ? (
+        <>
+          {Object.values(list).map((item, index) => (
+            <ConversationItem key={index} {...item} />
+          ))}
+        </>
+      ) : (
+        <p>No Conversation before</p>
+      )}
     </Box>
   );
 }

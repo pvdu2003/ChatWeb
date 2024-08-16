@@ -61,7 +61,7 @@ export const signupUser = async (
 };
 export const validUser = async () => {
   try {
-    const token = localStorage.getItem("token");
+    const token = sessionStorage.getItem("token");
 
     const { data } = await API(token).get(`/auth/valid`, {
       headers: { Authorization: token },

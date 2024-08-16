@@ -39,8 +39,8 @@ function Login() {
     if (resp.message) {
       setMessage(resp.message);
     } else {
-      localStorage.setItem("user", JSON.stringify(resp));
-      localStorage.setItem("token", resp.token);
+      sessionStorage.setItem("user", JSON.stringify(resp));
+      sessionStorage.setItem("token", resp.token);
       setAuthUser(resp);
       pageRoute("/");
     }
