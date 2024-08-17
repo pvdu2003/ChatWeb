@@ -1,8 +1,19 @@
+import { useState } from "react";
+
 import Box from "@mui/material/Box";
-import SearchInput from "./SearchInput";
-import SearchResult from "./SearchResult";
-import ConversationList from "./ConversationList";
+import SearchInput from "./search/SearchInput";
+import SearchResults from "./search/SearchResults";
+import ConversationList from "./conversation/ConversationList";
 export default function SidebarContainer() {
+  const [showResults, setShowResults] = useState(false);
+
+  const handleInputFocus = () => {
+    setShowResults(true);
+  };
+
+  const handleInputBlur = () => {
+    setShowResults(false);
+  };
   return (
     <Box
       sx={{
@@ -16,8 +27,8 @@ export default function SidebarContainer() {
         pt: 2,
       }}
     >
-      <SearchInput />
-      <SearchResult />
+      <SearchInput onFocus={handleInputFocus} onBlur={handleInputBlur} />
+      {showResults && <SearchResults />}
       <ConversationList />
     </Box>
   );

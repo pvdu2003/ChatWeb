@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import { Avatar, Box, ListItem, ListItemText, Typography } from "@mui/material";
-import { useAuthContext } from "../../context/AuthContext";
-import { useChatContext } from "../../context/ChatContext";
+import { useAuthContext } from "../../../context/AuthContext";
+import { useChatContext } from "../../../context/ChatContext";
 
 export default function ConversationItem({ chatId, users, lastMessage }) {
   const { authUser } = useAuthContext();

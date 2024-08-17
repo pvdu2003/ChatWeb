@@ -1,7 +1,7 @@
 import SearchIcon from "@mui/icons-material/Search";
 import { Paper, IconButton, InputBase } from "@mui/material";
-
-export default function SearchInput() {
+import PropTypes from "prop-types";
+export default function SearchInput({ onFocus, onBlur }) {
   return (
     <Paper
       component="form"
@@ -14,10 +14,19 @@ export default function SearchInput() {
         zIndex: 100,
       }}
     >
-      <InputBase sx={{ ml: 1, flex: 1 }} placeholder="Search Chat" />
+      <InputBase
+        sx={{ ml: 1, flex: 1 }}
+        placeholder="Search Chat"
+        onFocus={onFocus}
+        onBlur={onBlur}
+      />
       <IconButton type="button" sx={{ p: "10px" }} aria-label="search">
         <SearchIcon />
       </IconButton>
     </Paper>
   );
 }
+SearchInput.propTypes = {
+  onFocus: PropTypes.func.isRequired,
+  onBlur: PropTypes.func.isRequired,
+};

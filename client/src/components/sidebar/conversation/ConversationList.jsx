@@ -1,6 +1,6 @@
 import { Box } from "@mui/material";
 import { useEffect, useState } from "react";
-import { getAll } from "../../apis/chat";
+import { getAll } from "../../../apis/chat";
 import ConversationItem from "./ConversationItem";
 
 export default function ConversationList() {
