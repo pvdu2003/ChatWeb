@@ -17,6 +17,11 @@ const corsOptions = {
 // Connect to MongoDB
 db.connect();
 const app = express();
+const server = require("http").createServer(app);
+const io = require("socket.io")(server, {
+  cors: { origin: process.env.CLIENT_URL },
+});
+
 app.use(
   session({
     maxAge: 60 * 60 * 1000,
@@ -32,6 +37,20 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(cors(corsOptions));
 route(app);
-app.listen(port, () => {
+server.listen(port, () => {
   console.log(`App is running on port ${port}`);
+});
+const userSocketMap = {};
+io.on("connection", (socket) => {
+  console.log("New user connected" + socket.id);
+  const userId = socket.handshake.query.userId;
+  if (userId !== "undefined") userSocketMap[userId] = socket.id;
+
+  io.emit("getOnlineUsers", Object.keys(userSocketMap));
+
+  socket.on("disconnect", () => {
+    console.log("User disconnected" + socket.id);
+    delete userSocketMap[userId];
+    io.emit("getOnlineUsers", Object.keys(userSocketMap));
+  });
 });
