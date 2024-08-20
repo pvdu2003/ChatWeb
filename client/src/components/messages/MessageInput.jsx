@@ -1,21 +1,44 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import { Box, TextField, Button } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 
 import { useChatContext } from "../../context/ChatContext";
+import { useSocketContext } from "../../context/SocketContext";
 import { sendMessage } from "../../apis/message";
 export default function MessageInput() {
   const [message, setMessage] = useState("");
-  const { currChat } = useChatContext();
+  const { currChat, setMessages } = useChatContext();
+  const { socket } = useSocketContext();
   const handleMessageChange = (event) => {
     setMessage(event.target.value);
   };
-
+  useEffect(() => {
+    socket.on("sendMessage", (message) => {
+      setMessages((prevMessages) => [...prevMessages, message]);
+    });
+    return () => socket.off("receiveMessage");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [socket]);
   const handleSendMessage = async (e) => {
     e.preventDefault();
-    await sendMessage(currChat, message);
-    setMessage("");
+    if (message.trim()) {
+      try {
+        // Save the message to the database
+        const savedMessage = await sendMessage(currChat, message);
+
+        // Emit the message only after it's saved
+        socket.emit("sendMessage", {
+          chatId: currChat,
+          text: savedMessage.text,
+        });
+
+        // Clear the input after sending
+        setMessage("");
+      } catch (error) {
+        console.error("Error sending message:", error);
+      }
+    }
   };
   return (
     <Box

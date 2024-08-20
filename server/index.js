@@ -20,6 +20,7 @@ const app = express();
 const server = require("http").createServer(app);
 const io = require("socket.io")(server, {
   cors: { origin: process.env.CLIENT_URL },
+  methods: ["GET", "POST"],
 });
 
 app.use(
@@ -42,14 +43,17 @@ server.listen(port, () => {
 });
 const userSocketMap = {};
 io.on("connection", (socket) => {
-  console.log("New user connected" + socket.id);
   const userId = socket.handshake.query.userId;
   if (userId !== "undefined") userSocketMap[userId] = socket.id;
-
+  // For get all users online
   io.emit("getOnlineUsers", Object.keys(userSocketMap));
 
+  // For send message
+  socket.on("sendMessage", (message) => {
+    io.emit("receiveMessage", message);
+  });
+  // For disconnect app
   socket.on("disconnect", () => {
-    console.log("User disconnected" + socket.id);
     delete userSocketMap[userId];
     io.emit("getOnlineUsers", Object.keys(userSocketMap));
   });

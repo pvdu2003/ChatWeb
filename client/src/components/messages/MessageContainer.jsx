@@ -9,9 +9,8 @@ import { useChatContext } from "../../context/ChatContext";
 import NoChatSelected from "./NoChatSelected";
 
 export default function MessageContainer() {
-  const [messages, setMessages] = useState([]);
   const [users, setUsers] = useState([]);
-  const { currChat } = useChatContext();
+  const { currChat, messages, setMessages } = useChatContext();
 
   const fetchChat = async () => {
     if (!currChat) return;
@@ -27,7 +26,7 @@ export default function MessageContainer() {
   useEffect(() => {
     fetchChat();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currChat]);
+  }, [currChat, messages]);
   return (
     <>
       {currChat ? (
