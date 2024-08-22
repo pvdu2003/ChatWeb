@@ -17,7 +17,7 @@ export default function ConversationItem({ chatId, users, lastMessage }) {
   const receivers = users.filter((user) => user._id !== authUser._id);
   const isActive = currChat === chatId;
   const { onlineUsers } = useSocketContext();
-  const isOnline = onlineUsers.includes(receivers[0]._id);
+  const isOnline = onlineUsers.includes(receivers[0]?._id);
 
   const clickHandler = () => {
     setCurrChat(chatId);
@@ -36,7 +36,7 @@ export default function ConversationItem({ chatId, users, lastMessage }) {
           variant="dot"
           color="success"
         >
-          <Avatar src={receivers[0].avatar} />
+          <Avatar src={receivers[0]?.avatar} />
         </Badge>
       ) : (
         <Avatar src={receivers[0]?.avatar} />

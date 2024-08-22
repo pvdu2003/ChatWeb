@@ -11,10 +11,18 @@ export const useChatContext = () => {
 export const ChatContextProvider = ({ children }) => {
   const [currChat, setCurrChat] = useState();
   const [messages, setMessages] = useState([]);
+  const [receiverId, setReceiverId] = useState();
 
   return (
     <ChatContext.Provider
-      value={{ currChat, setCurrChat, messages, setMessages }}
+      value={{
+        currChat,
+        setCurrChat,
+        messages,
+        setMessages,
+        receiverId,
+        setReceiverId,
+      }}
     >
       {children}
     </ChatContext.Provider>

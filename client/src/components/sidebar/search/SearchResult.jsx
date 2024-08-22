@@ -1,9 +1,13 @@
 import PropTypes from "prop-types";
 import { ListItem, ListItemText, Avatar, Box } from "@mui/material";
-
+import { useChatContext } from "../../../context/ChatContext";
 export default function SearchResult({ id, avatar, full_name }) {
+  const { setReceiverId } = useChatContext();
+  const handleClick = () => {
+    setReceiverId(id);
+  };
   return (
-    <ListItem button key={id}>
+    <ListItem button key={id} onClick={handleClick}>
       <Avatar src={avatar} />
       <Box sx={{ paddingLeft: 1, flex: 1 }}>
         <ListItemText

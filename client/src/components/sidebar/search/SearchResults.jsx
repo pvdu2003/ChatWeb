@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-import { Paper, List } from "@mui/material";
+import { List } from "@mui/material";
 import SearchResult from "./SearchResult";
 
 import { getAll } from "../../../apis/user";
@@ -23,17 +23,7 @@ export default function SearchResults() {
   }, []);
 
   return (
-    <Paper
-      sx={{
-        marginTop: 9,
-        top: 0,
-        bgcolor: "white",
-        position: "absolute",
-        width: "100%",
-        zIndex: 110,
-      }}
-      elevation={4}
-    >
+    <>
       <List
         sx={{
           backgroundColor: "white",
@@ -48,6 +38,6 @@ export default function SearchResults() {
           />
         ))}
       </List>
-    </Paper>
+    </>
   );
 }
