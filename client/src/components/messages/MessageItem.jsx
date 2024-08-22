@@ -3,13 +3,13 @@ import PropTypes from "prop-types";
 import { Grid, Box, ListItem, ListItemText, Tooltip } from "@mui/material";
 import { useAuthContext } from "../../context/AuthContext";
 import { extractTime } from "../../utils/extractTime";
-export default function MessageItem({ index, message }) {
+export default function MessageItem({ message }) {
   const { authUser } = useAuthContext();
   const fromMe = authUser._id === message.sender_id._id;
   const formattedTime = extractTime(message.createdAt);
 
   return (
-    <ListItem key={index} sx={{ padding: [0, 0.2] }}>
+    <ListItem sx={{ padding: [0, 0.2] }}>
       <Grid container justifyContent={!fromMe ? "flex-start" : "flex-end"}>
         <Grid
           item
@@ -38,7 +38,6 @@ export default function MessageItem({ index, message }) {
   );
 }
 MessageItem.propTypes = {
-  index: PropTypes.number.isRequired,
   message: PropTypes.shape({
     _id: PropTypes.string.isRequired,
     sender_id: PropTypes.shape({
