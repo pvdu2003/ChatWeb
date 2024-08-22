@@ -1,7 +1,15 @@
 import SearchIcon from "@mui/icons-material/Search";
 import { Paper, IconButton, InputBase } from "@mui/material";
 import PropTypes from "prop-types";
-export default function SearchInput({ onFocus, onBlur }) {
+import { useState } from "react";
+
+export default function SearchInput({ onFocus, onBlur, onQueryChange }) {
+  const [query, setQuery] = useState("");
+  const handleQueryChange = (event) => {
+    const newQuery = event.target.value;
+    setQuery(newQuery);
+    onQueryChange(newQuery);
+  };
   return (
     <Paper
       component="form"
@@ -19,6 +27,8 @@ export default function SearchInput({ onFocus, onBlur }) {
         placeholder="Search Chat"
         onFocus={onFocus}
         onBlur={onBlur}
+        onChange={handleQueryChange}
+        value={query}
       />
       <IconButton type="button" sx={{ p: "10px" }} aria-label="search">
         <SearchIcon />
@@ -29,4 +39,5 @@ export default function SearchInput({ onFocus, onBlur }) {
 SearchInput.propTypes = {
   onFocus: PropTypes.func.isRequired,
   onBlur: PropTypes.func.isRequired,
+  onQueryChange: PropTypes.func.isRequired,
 };

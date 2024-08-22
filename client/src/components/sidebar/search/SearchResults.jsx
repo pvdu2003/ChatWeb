@@ -1,15 +1,21 @@
 import { useState, useEffect } from "react";
+import PropTypes from "prop-types";
 
-import { List } from "@mui/material";
+import { List, Typography } from "@mui/material";
 import SearchResult from "./SearchResult";
 
 import { getAll } from "../../../apis/user";
-export default function SearchResults() {
+export default function SearchResults({ query }) {
   const [users, setUsers] = useState([]);
 
   const fetchAllUsers = async () => {
     try {
-      const users = await getAll();
+      let users;
+      if (query) {
+        users = await getAll(query);
+      } else {
+        users = await getAll();
+      }
       setUsers(users);
     } catch (error) {
       console.error(
@@ -20,7 +26,8 @@ export default function SearchResults() {
 
   useEffect(() => {
     fetchAllUsers();
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [query]);
 
   return (
     <>
@@ -29,15 +36,24 @@ export default function SearchResults() {
           backgroundColor: "white",
         }}
       >
-        {users.map((user) => (
-          <SearchResult
-            key={user._id}
-            id={user._id}
-            avatar={user.avatar}
-            full_name={user.full_name}
-          />
-        ))}
+        {users.length === 0 ? (
+          <Typography align="center">No users found.</Typography>
+        ) : (
+          <>
+            {users.map((user) => (
+              <SearchResult
+                key={user._id}
+                id={user._id}
+                avatar={user.avatar}
+                full_name={user.full_name}
+              />
+            ))}
+          </>
+        )}
       </List>
     </>
   );
 }
+SearchResults.propTypes = {
+  query: PropTypes.string,
+};

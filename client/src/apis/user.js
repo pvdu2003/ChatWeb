@@ -15,10 +15,15 @@ const API = (token) =>
 //     console.error(error);
 //   }
 // };
-export const getAll = async () => {
+export const getAll = async (user = "") => {
   try {
     const token = sessionStorage.getItem("token");
-    const response = await API(token).get("/user/all");
+    let response;
+    if (user === "" || user === undefined) {
+      response = await API(token).get("/user/all");
+    } else {
+      response = await API(token).get(`/user/all?user=${user}`);
+    }
     console.log(response);
 
     return response.data;

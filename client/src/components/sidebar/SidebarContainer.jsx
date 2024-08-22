@@ -7,6 +7,7 @@ import ConversationList from "./conversation/ConversationList";
 export default function SidebarContainer() {
   const [showResults, setShowResults] = useState(false);
   const resultsRef = useRef(null); // Create a ref for SearchResults
+  const [query, setQuery] = useState("");
 
   const handleInputFocus = () => {
     setShowResults(true);
@@ -25,6 +26,10 @@ export default function SidebarContainer() {
     }
     setShowResults(false);
   };
+
+  const handleQueryChange = (newQuery) => {
+    setQuery(newQuery);
+  };
   return (
     <Box
       sx={{
@@ -38,7 +43,11 @@ export default function SidebarContainer() {
         pt: 2,
       }}
     >
-      <SearchInput onFocus={handleInputFocus} onBlur={handleInputBlur} />
+      <SearchInput
+        onFocus={handleInputFocus}
+        onBlur={handleInputBlur}
+        onQueryChange={handleQueryChange}
+      />
       {/* {showResults && <SearchResults />} */}
       {showResults && (
         <Paper
@@ -54,7 +63,7 @@ export default function SidebarContainer() {
           ref={resultsRef}
         >
           {/* Attach the ref to the results container */}
-          <SearchResults />
+          <SearchResults query={query} />
         </Paper>
       )}
       <ConversationList />
