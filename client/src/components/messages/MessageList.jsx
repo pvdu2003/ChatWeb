@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 
-import { List } from "@mui/material";
+import { List, Typography, Box } from "@mui/material";
 import MessageItem from "./MessageItem";
 
 export default function MessageList({ messages }) {
@@ -14,9 +14,24 @@ export default function MessageList({ messages }) {
         mt: 2.4,
       }}
     >
-      {messages.map((message, index) => (
-        <MessageItem message={message} key={index} index={index} />
-      ))}
+      {messages?.length === 0 ? (
+        <Box
+          sx={{
+            textAlign: "center",
+            color: "gray.200",
+            fontWeight: "bold",
+            gap: 1,
+          }}
+        >
+          <Typography variant="body1">
+            No messages in this chat! Send something to this user!
+          </Typography>
+        </Box>
+      ) : (
+        messages?.map((message, index) => (
+          <MessageItem message={message} key={index} index={index} />
+        ))
+      )}
     </List>
   );
 }
@@ -24,11 +39,11 @@ export default function MessageList({ messages }) {
 MessageList.propTypes = {
   messages: PropTypes.arrayOf(
     PropTypes.shape({
-      _id: PropTypes.string.isRequired,
-      sender_id: PropTypes.object.isRequired,
-      message: PropTypes.string.isRequired,
-      createdAt: PropTypes.string.isRequired,
-      updatedAt: PropTypes.string.isRequired,
+      _id: PropTypes.string,
+      sender_id: PropTypes.object,
+      message: PropTypes.string,
+      createdAt: PropTypes.string,
+      updatedAt: PropTypes.string,
     })
-  ).isRequired,
+  ),
 };

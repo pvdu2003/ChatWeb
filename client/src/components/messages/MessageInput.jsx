@@ -14,8 +14,8 @@ export default function MessageInput() {
     setMessage(event.target.value);
   };
   useEffect(() => {
-    socket.on("sendMessage", (message) => {
-      setMessages((prevMessages) => [...prevMessages, message]);
+    socket.on("receiveMessage", (data) => {
+      setMessages((prevMessages) => [...prevMessages, data.message.getSender]);
     });
     return () => socket.off("receiveMessage");
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -26,11 +26,12 @@ export default function MessageInput() {
       try {
         // Save the message to the database
         const savedMessage = await sendMessage(currChat, message);
+        console.log(savedMessage);
 
         // Emit the message only after it's saved
         socket.emit("sendMessage", {
           chatId: currChat,
-          text: savedMessage.text,
+          message: savedMessage,
         });
 
         // Clear the input after sending

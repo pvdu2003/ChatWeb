@@ -2,9 +2,9 @@ import PropTypes from "prop-types";
 import { ListItem, ListItemText, Avatar, Box } from "@mui/material";
 import { useChatContext } from "../../../context/ChatContext";
 export default function SearchResult({ id, avatar, full_name }) {
-  const { setReceiverId } = useChatContext();
+  const { setCurrChat } = useChatContext();
   const handleClick = () => {
-    setReceiverId(id);
+    setCurrChat(id);
   };
   return (
     <ListItem button key={id} onClick={handleClick}>

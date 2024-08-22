@@ -10,12 +10,13 @@ import NoChatSelected from "./NoChatSelected";
 
 export default function MessageContainer() {
   const [users, setUsers] = useState([]);
-  const { currChat, messages, setMessages } = useChatContext();
+  const { currChat, setCurrChat, messages, setMessages } = useChatContext();
 
   const fetchChat = async () => {
     if (!currChat) return;
     try {
       const data = await getById(currChat);
+      setCurrChat(data._id);
       setUsers(data.users);
       setMessages(data.messages);
     } catch (error) {
@@ -26,7 +27,7 @@ export default function MessageContainer() {
   useEffect(() => {
     fetchChat();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currChat, messages]);
+  }, [currChat]);
   return (
     <>
       {currChat ? (

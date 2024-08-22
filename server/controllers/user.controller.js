@@ -6,7 +6,7 @@ class chatController {
     try {
       const user_id = req.user._id;
       const users = await User.find({ _id: { $ne: user_id } }).select(
-        " _id full_name avatar"
+        " _id full_name username avatar"
       );
       res.json(users);
     } catch (error) {

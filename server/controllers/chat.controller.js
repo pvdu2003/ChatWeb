@@ -4,18 +4,22 @@ const Message = require("../models/message.model.js");
 class chatController {
   // [GET] /chat/:id
   async getById(req, res, next) {
-    const chat_id = req.params.id;
+    const id = req.params.id;
     const user_id = req.user._id;
     const isParticipant = await Chat.findOne({
-      _id: chat_id,
+      _id: id,
       users: { $in: [user_id] },
     });
     if (!isParticipant) {
-      return res.status(403).json({
-        message: "You are not in this chat or this chat is not exist!",
+      const newChat = new Chat({ users: [id, user_id], messages: [] });
+      await newChat.save();
+      const chatDetail = await Chat.findById(newChat._id).populate({
+        path: "users",
+        select: "-password -email -gender",
       });
+      return res.status(201).json(chatDetail);
     }
-    const chat = await Chat.findById(chat_id)
+    const chat = await Chat.findById(id)
       .populate({
         path: "users",
         select: "-password -email -gender",

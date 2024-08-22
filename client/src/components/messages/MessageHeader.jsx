@@ -5,7 +5,7 @@ import { useAuthContext } from "../../context/AuthContext";
 
 export default function MessageHeader({ users }) {
   const { authUser } = useAuthContext();
-  const receivers = users.filter((user) => user._id !== authUser._id);
+  const receivers = users?.filter((user) => user._id !== authUser._id);
 
   return (
     <Box
@@ -29,7 +29,7 @@ export default function MessageHeader({ users }) {
           p: 0.5,
         }}
       >
-        {receivers.length > 0 ? (
+        {receivers?.length > 0 ? (
           <>
             <Badge
               overlap="circular"
@@ -37,10 +37,10 @@ export default function MessageHeader({ users }) {
               variant="dot"
               color="success"
             >
-              <Avatar src={receivers[0].avatar} />
+              <Avatar src={receivers[0]?.avatar} />
             </Badge>
             <Box sx={{ paddingLeft: 1.2 }}>
-              <p className="m-0 fw-bold">{receivers[0].full_name}</p>
+              <p className="m-0 fw-bold">{receivers[0]?.full_name}</p>
             </Box>
           </>
         ) : (
@@ -56,10 +56,10 @@ export default function MessageHeader({ users }) {
 MessageHeader.propTypes = {
   users: PropTypes.arrayOf(
     PropTypes.shape({
-      _id: PropTypes.string.isRequired,
-      username: PropTypes.string.isRequired,
-      full_name: PropTypes.string.isRequired,
-      avatar: PropTypes.string.isRequired,
+      _id: PropTypes.string,
+      username: PropTypes.string,
+      full_name: PropTypes.string,
+      avatar: PropTypes.string,
     })
-  ).isRequired,
+  ),
 };

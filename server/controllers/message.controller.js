@@ -14,14 +14,18 @@ class messageController {
         });
         await chat.save();
       }
-      const newMesssage = new Message({
+      const newMessage = new Message({
         chat_id: chat._id,
         sender_id,
         message,
       });
-      chat.messages.push(newMesssage._id);
-      await Promise.all([newMesssage.save(), chat.save()]);
-      res.status(200).json({ newMesssage, chat });
+      chat.messages.push(newMessage._id);
+      await Promise.all([newMessage.save(), chat.save()]);
+      const getSender = await Message.findById(newMessage._id).populate({
+        path: "sender_id",
+        select: "-password -email -gender",
+      });
+      res.status(200).json({ getSender, chat });
     } catch (err) {
       console.log(err);
     }
