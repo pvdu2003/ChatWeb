@@ -56,9 +56,11 @@ export default function ConversationItem({ chatId, users, lastMessage }) {
                     textOverflow: "ellipsis",
                     whiteSpace: "nowrap",
                     maxWidth: {
-                      sm: "130px",
-                      md: "220px",
+                      sm: "76px",
+                      md: "140px",
+                      lg: "214px",
                     },
+                    width: "100%",
                   }}
                 >
                   {lastMessage}
