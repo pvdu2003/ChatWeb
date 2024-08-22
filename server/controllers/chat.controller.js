@@ -4,19 +4,37 @@ const Message = require("../models/message.model.js");
 class chatController {
   // [GET] /chat/:id
   async getById(req, res, next) {
+    // id can be chat_id or user_id
     const id = req.params.id;
     const user_id = req.user._id;
-    const isParticipant = await Chat.findOne({
-      _id: id,
-      users: { $in: [user_id] },
-    });
-    if (!isParticipant) {
-      const newChat = new Chat({ users: [id, user_id], messages: [] });
-      await newChat.save();
-      const chatDetail = await Chat.findById(newChat._id).populate({
-        path: "users",
-        select: "-password -email -gender",
-      });
+    const prevChat = await Chat.findById(id);
+    if (!prevChat) {
+      let chatDetail;
+      const matchedChat = await Chat.findOne({
+        users: { $all: [user_id, id] },
+      })
+        .populate({
+          path: "users",
+          select: "-password -email -gender",
+        })
+        .populate({
+          path: "messages",
+          populate: {
+            path: "sender_id",
+            select: "-password -email -gender",
+          },
+          options: { sort: { createdAt: 1 } },
+        });
+      if (!matchedChat) {
+        const newChat = new Chat({ users: [id, user_id], messages: [] });
+        await newChat.save();
+        chatDetail = await Chat.findById(newChat._id).populate({
+          path: "users",
+          select: "-password -email -gender",
+        });
+      } else {
+        chatDetail = matchedChat;
+      }
       return res.status(201).json(chatDetail);
     }
     const chat = await Chat.findById(id)

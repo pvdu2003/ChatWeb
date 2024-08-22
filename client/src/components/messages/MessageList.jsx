@@ -11,10 +11,8 @@ export default function MessageList({ messages }) {
       const date = new Date(msg.createdAt);
       let msgDate = date.toDateString();
       const msgYear = date.getFullYear();
-      // console.log(msgYear, currYear);
       if (msgYear === currYear) {
         msgDate = msgDate.split(" ").slice(0, 3).join(" ");
-        console.log(msgDate);
       }
 
       const lastGroup = groupedMessages[groupedMessages.length - 1];

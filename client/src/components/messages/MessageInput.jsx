@@ -15,7 +15,12 @@ export default function MessageInput() {
   };
   useEffect(() => {
     socket.on("receiveMessage", (data) => {
-      setMessages((prevMessages) => [...prevMessages, data.message.getSender]);
+      if (data.chatId === currChat) {
+        setMessages((prevMessages) => [
+          ...prevMessages,
+          data.message.getSender,
+        ]);
+      }
     });
     return () => socket.off("receiveMessage");
     // eslint-disable-next-line react-hooks/exhaustive-deps
