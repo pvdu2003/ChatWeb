@@ -63,7 +63,7 @@ export default function SidebarContainer() {
           ref={resultsRef}
         >
           {/* Attach the ref to the results container */}
-          <SearchResults query={query} />
+          <SearchResults query={query} setShowResults={setShowResults} />
         </Paper>
       )}
       <ConversationList />

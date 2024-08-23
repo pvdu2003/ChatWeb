@@ -5,7 +5,7 @@ import { List, Typography } from "@mui/material";
 import SearchResult from "./SearchResult";
 
 import { getAll } from "../../../apis/user";
-export default function SearchResults({ query }) {
+export default function SearchResults({ query, setShowResults }) {
   const [users, setUsers] = useState([]);
 
   const fetchAllUsers = async () => {
@@ -46,6 +46,7 @@ export default function SearchResults({ query }) {
                 id={user._id}
                 avatar={user.avatar}
                 full_name={user.full_name}
+                setShowResults={setShowResults}
               />
             ))}
           </>
@@ -56,4 +57,5 @@ export default function SearchResults({ query }) {
 }
 SearchResults.propTypes = {
   query: PropTypes.string,
+  setShowResults: PropTypes.func,
 };
