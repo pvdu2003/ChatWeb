@@ -5,12 +5,12 @@ class messageController {
   // [POST] /send
   async sendHandler(req, res, next) {
     try {
-      const { receiver_id, message, chat_id } = req.body;
+      const { message, id } = req.body;
       const sender_id = req.user._id;
-      let chat = await Chat.findById(chat_id);
+      let chat = await Chat.findById(id);
       if (!chat) {
         chat = new Chat({
-          users: [sender_id, receiver_id],
+          users: [sender_id, id],
         });
         await chat.save();
       }

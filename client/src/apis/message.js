@@ -10,7 +10,7 @@ export const sendMessage = async (currChat, message) => {
   try {
     const token = sessionStorage.getItem("token");
     const response = await API(token).post(`/message/send`, {
-      chat_id: currChat,
+      id: currChat,
       message: message,
     });
     console.log(response.data);
