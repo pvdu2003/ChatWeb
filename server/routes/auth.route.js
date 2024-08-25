@@ -23,8 +23,14 @@ router.get(
     const token = generateToken(req.user);
     res.setHeader("Authorization", `Bearer ${token}`);
     res.cookie("token", token, { maxAge: 60 * 60 * 1000 });
-    res.redirect(`${process.env.CLIENT_URL}/chat`);
+    res.redirect(`${process.env.CLIENT_URL}`);
   }
 );
+router.get("/google/success", async (req, res) => {
+  return res.status(200).json({
+    token: req.cookies.token,
+    user: req.user,
+  });
+});
 router.post("/logout", authController.logout);
 module.exports = router;

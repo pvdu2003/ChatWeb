@@ -21,6 +21,7 @@ passport.use(
       clientID: process.env.CLIENT_ID,
       clientSecret: process.env.CLIENT_SECRET,
       callbackURL: `${process.env.BASE_URL}/auth/google/redirect`,
+      scope: ["profile", "email"],
     },
     (accessToken, refreshToken, profile, done) => {
       User.findOne({ email: profile.emails[0].value })

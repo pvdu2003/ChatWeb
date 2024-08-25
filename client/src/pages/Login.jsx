@@ -12,7 +12,7 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { loginUser } from "../apis/auth";
+import { loginUser, oathGoogle } from "../apis/auth";
 import { useAuthContext } from "../context/AuthContext";
 function Login() {
   const defaultTheme = createTheme();
@@ -22,7 +22,7 @@ function Login() {
     username: "",
     password: "",
   };
-  const { setAuthUser } = useAuthContext();
+  const { authUser, setAuthUser } = useAuthContext();
   const [formData, setFormData] = useState(defaultData);
   const [message, setMessage] = useState("");
   const handleOnChange = (e) => {
@@ -34,7 +34,6 @@ function Login() {
     const username = data.get("username");
     const password = data.get("password");
     const resp = await loginUser(username, password);
-    console.log(resp);
 
     if (resp.message) {
       setMessage(resp.message);
@@ -45,9 +44,32 @@ function Login() {
       pageRoute("/");
     }
   };
+  const googleAuth = () => {
+    window.open(
+      `${import.meta.env.VITE_SERVER_URL}/auth/google/redirect`,
+      "_self"
+    );
+  };
   useEffect(() => {
     setMessage("");
   }, [formData]);
+  useEffect(() => {
+    const oauthGoogle = async () => {
+      try {
+        const responseData = await oathGoogle();
+        if (responseData.user) {
+          sessionStorage.setItem("user", JSON.stringify(responseData.user));
+          sessionStorage.setItem("token", responseData.token);
+          setAuthUser(responseData.user);
+        }
+      } catch (error) {
+        console.error("Error fetching Google OAuth data:", error);
+      }
+    };
+
+    oauthGoogle();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [authUser]);
 
   return (
     <>
@@ -108,14 +130,22 @@ function Login() {
               >
                 Login
               </Button>
-              <Link
+              <Button
+                fullWidth
+                variant="outlined"
+                sx={{ mt: 3, mb: 2 }}
+                onClick={googleAuth}
+              >
+                Login with Google
+              </Button>
+              {/* <Link
                 href={`${import.meta.env.VITE_SERVER_URL}/auth/google`}
                 className="btn active text-decoration-none w-100 mb-2"
                 data-bs-toggle="button"
                 aria-pressed="true"
               >
                 Login with Google
-              </Link>
+              </Link> */}
               <Grid container>
                 <Grid item xs>
                   <Link href="#" variant="body2">
