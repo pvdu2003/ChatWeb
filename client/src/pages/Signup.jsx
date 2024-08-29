@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
@@ -17,6 +17,9 @@ import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import "bootstrap/dist/css/bootstrap.min.css";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 import { signupUser } from "../apis/auth";
 
 export default function SignUp() {
@@ -32,7 +35,6 @@ export default function SignUp() {
     gender: "Male",
   };
   const [formData, setFormData] = useState(defaultData);
-  const [message, setMessage] = useState("");
   const handleOnChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -47,7 +49,6 @@ export default function SignUp() {
     const password = data.get("password");
     const confirm_password = data.get("confirm_password");
     const gender = data.get("gender");
-    console.log(username, email, password, gender, full_name, confirm_password);
 
     const resp = await signupUser(
       username,
@@ -58,15 +59,14 @@ export default function SignUp() {
       confirm_password
     );
     if (resp.message) {
-      setMessage(resp.message);
+      toast.error(resp.message);
     } else {
-      pageRoute("/login");
+      toast.success("User created successfully!", { autoClose: 1000 });
+      setTimeout(() => {
+        pageRoute("/login");
+      }, 1500);
     }
   };
-  useEffect(() => {
-    setMessage("");
-  }, [formData]);
-
   return (
     <ThemeProvider theme={defaultTheme}>
       <Container component="main" maxWidth="xs">
@@ -194,9 +194,6 @@ export default function SignUp() {
                 />
               </RadioGroup>
             </FormControl>
-            {message && (
-              <p className="fs-6 text-danger fst-italic">{message}</p>
-            )}
             <Button
               type="submit"
               fullWidth
@@ -214,6 +211,7 @@ export default function SignUp() {
             </Grid>
           </Box>
         </Box>
+        <ToastContainer />
       </Container>
     </ThemeProvider>
   );

@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -12,11 +11,13 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import "bootstrap/dist/css/bootstrap.min.css";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 import { loginUser, oathGoogle } from "../apis/auth";
 import { useAuthContext } from "../context/AuthContext";
 function Login() {
   const defaultTheme = createTheme();
-  const pageRoute = useNavigate();
 
   const defaultData = {
     username: "",
@@ -24,7 +25,6 @@ function Login() {
   };
   const { authUser, setAuthUser } = useAuthContext();
   const [formData, setFormData] = useState(defaultData);
-  const [message, setMessage] = useState("");
   const handleOnChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -36,12 +36,14 @@ function Login() {
     const resp = await loginUser(username, password);
 
     if (resp.message) {
-      setMessage(resp.message);
+      toast.error(resp.message);
     } else {
       sessionStorage.setItem("user", JSON.stringify(resp));
       sessionStorage.setItem("token", resp.token);
-      setAuthUser(resp);
-      pageRoute("/");
+      toast.success("Login successfully!!!", { autoClose: 1000 });
+      setTimeout(() => {
+        setAuthUser(resp);
+      }, 1500);
     }
   };
   const googleAuth = () => {
@@ -50,9 +52,7 @@ function Login() {
       "_self"
     );
   };
-  useEffect(() => {
-    setMessage("");
-  }, [formData]);
+
   useEffect(() => {
     const oauthGoogle = async () => {
       try {
@@ -118,9 +118,6 @@ function Login() {
                 autoComplete="current-password"
                 onChange={handleOnChange}
               />
-              {message && (
-                <p className="fs-6 text-danger fst-italic">{message}</p>
-              )}
               <Button
                 type="submit"
                 fullWidth
@@ -138,14 +135,6 @@ function Login() {
               >
                 Login with Google
               </Button>
-              {/* <Link
-                href={`${import.meta.env.VITE_SERVER_URL}/auth/google`}
-                className="btn active text-decoration-none w-100 mb-2"
-                data-bs-toggle="button"
-                aria-pressed="true"
-              >
-                Login with Google
-              </Link> */}
               <Grid container>
                 <Grid item xs>
                   <Link href="#" variant="body2">
@@ -160,6 +149,7 @@ function Login() {
               </Grid>
             </Box>
           </Box>
+          <ToastContainer />
         </Container>
       </ThemeProvider>
     </>

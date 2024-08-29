@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 
 import { Box, TextField, Button } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import { useChatContext } from "../../context/ChatContext";
 import { useSocketContext } from "../../context/SocketContext";
@@ -14,15 +16,22 @@ export default function MessageInput() {
     setMessage(event.target.value);
   };
   useEffect(() => {
-    socket.on("receiveMessage", (data) => {
-      if (data.chatId === currChat) {
-        setMessages((prevMessages) => [
-          ...prevMessages,
-          data.message.getSender,
-        ]);
+    const handleReceiveMessage = (data) => {
+      let senderInfo = data.message.getSender;
+      if (data.chatId === currChat || !currChat) {
+        setMessages((prevMessages) => [...prevMessages, senderInfo]);
+      } else {
+        // Show notification for new messages in other chats
+        toast(
+          `New message from ${senderInfo.sender_id.full_name}: ${senderInfo.message}`
+        );
       }
-    });
-    return () => socket.off("receiveMessage");
+    };
+
+    socket.on("receiveMessage", handleReceiveMessage);
+    return () => {
+      socket.off("receiveMessage", handleReceiveMessage);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [socket]);
   const handleSendMessage = async (e) => {
@@ -77,6 +86,7 @@ export default function MessageInput() {
       >
         Send
       </Button>
+      <ToastContainer position="bottom-left" />
     </Box>
   );
 }

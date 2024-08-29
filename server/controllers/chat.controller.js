@@ -7,7 +7,19 @@ class chatController {
     // id can be chat_id or user_id
     const id = req.params.id;
     const user_id = req.user._id;
-    const prevChat = await Chat.findById(id);
+    const prevChat = await Chat.findById(id)
+      .populate({
+        path: "users",
+        select: "-password -email -gender",
+      })
+      .populate({
+        path: "messages",
+        populate: {
+          path: "sender_id",
+          select: "-password -email -gender",
+        },
+        options: { sort: { createdAt: 1 } },
+      });
     if (!prevChat) {
       let chatDetail;
       const matchedChat = await Chat.findOne({
@@ -37,20 +49,7 @@ class chatController {
       }
       return res.status(201).json(chatDetail);
     }
-    const chat = await Chat.findById(id)
-      .populate({
-        path: "users",
-        select: "-password -email -gender",
-      })
-      .populate({
-        path: "messages",
-        populate: {
-          path: "sender_id",
-          select: "-password -email -gender",
-        },
-        options: { sort: { createdAt: 1 } },
-      });
-    res.status(200).json(chat);
+    res.status(200).json(prevChat);
   }
   // [GET] /chat/all
   async getAll(req, res, next) {
