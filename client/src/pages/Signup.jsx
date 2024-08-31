@@ -17,7 +17,7 @@ import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import { signupUser } from "../apis/auth";
@@ -211,7 +211,6 @@ export default function SignUp() {
             </Grid>
           </Box>
         </Box>
-        <ToastContainer />
       </Container>
     </ThemeProvider>
   );

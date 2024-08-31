@@ -2,28 +2,36 @@ import { useState, useEffect } from "react";
 
 import { Box, TextField, Button } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import { useChatContext } from "../../context/ChatContext";
+import { useAuthContext } from "../../context/AuthContext";
 import { useSocketContext } from "../../context/SocketContext";
 import { sendMessage } from "../../apis/message";
 export default function MessageInput() {
   const [message, setMessage] = useState("");
-  const { currChat, setMessages } = useChatContext();
+  const { currChat, messages, setMessages } = useChatContext();
+  const { authUser } = useAuthContext();
   const { socket } = useSocketContext();
   const handleMessageChange = (event) => {
     setMessage(event.target.value);
   };
   useEffect(() => {
     const handleReceiveMessage = (data) => {
+      let chatDetail = data.message.chat;
       let senderInfo = data.message.getSender;
-      if (data.chatId === currChat || !currChat) {
-        setMessages((prevMessages) => [...prevMessages, senderInfo]);
-      } else {
+      setMessages((prevMessages) => [...prevMessages, senderInfo]);
+      if (
+        !currChat ||
+        data.chatId !== currChat ||
+        (chatDetail.users.includes(authUser._id) &&
+          senderInfo.sender_id._id !== authUser._id)
+      ) {
         // Show notification for new messages in other chats
         toast(
-          `New message from ${senderInfo.sender_id.full_name}: ${senderInfo.message}`
+          `New message from ${senderInfo.sender_id.full_name}: ${senderInfo.message}`,
+          { position: "bottom-left", autoClose: 2000 }
         );
       }
     };
@@ -33,7 +41,7 @@ export default function MessageInput() {
       socket.off("receiveMessage", handleReceiveMessage);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [socket]);
+  }, [socket, messages]);
   const handleSendMessage = async (e) => {
     e.preventDefault();
     if (message.trim()) {
@@ -86,7 +94,6 @@ export default function MessageInput() {
       >
         Send
       </Button>
-      <ToastContainer position="bottom-left" />
     </Box>
   );
 }

@@ -11,7 +11,7 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import { loginUser, oathGoogle } from "../apis/auth";
@@ -149,7 +149,6 @@ function Login() {
               </Grid>
             </Box>
           </Box>
-          <ToastContainer />
         </Container>
       </ThemeProvider>
     </>
