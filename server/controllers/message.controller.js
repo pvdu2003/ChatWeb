@@ -9,10 +9,15 @@ class messageController {
       const sender_id = req.user._id;
       let chat = await Chat.findById(id);
       if (!chat) {
-        chat = new Chat({
-          users: [sender_id, id],
+        chat = await Chat.findOne({
+          users: { $all: [sender_id, id] },
         });
-        await chat.save();
+        if (!chat) {
+          chat = new Chat({
+            users: [sender_id, id],
+          });
+          await chat.save();
+        }
       }
       const newMessage = new Message({
         chat_id: chat._id,

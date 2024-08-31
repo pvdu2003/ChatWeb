@@ -20,36 +20,45 @@ class chatController {
         },
         options: { sort: { createdAt: 1 } },
       });
-    if (!prevChat) {
-      let chatDetail;
-      const matchedChat = await Chat.findOne({
-        users: { $all: [user_id, id] },
-      })
-        .populate({
-          path: "users",
-          select: "-password -email -gender",
-        })
-        .populate({
-          path: "messages",
-          populate: {
-            path: "sender_id",
-            select: "-password -email -gender",
-          },
-          options: { sort: { createdAt: 1 } },
-        });
-      if (!matchedChat) {
-        const newChat = new Chat({ users: [id, user_id], messages: [] });
-        await newChat.save();
-        chatDetail = await Chat.findById(newChat._id).populate({
-          path: "users",
-          select: "-password -email -gender",
-        });
-      } else {
-        chatDetail = matchedChat;
-      }
-      return res.status(201).json(chatDetail);
+
+    // If found, return the existing chat
+    if (prevChat) {
+      return res.status(200).json(prevChat);
     }
-    res.status(200).json(prevChat);
+
+    // If not found, check for an existing chat between the two users
+    const matchedChat = await Chat.findOne({
+      users: { $all: [user_id, id] },
+    })
+      .populate({
+        path: "users",
+        select: "-password -email -gender",
+      })
+      .populate({
+        path: "messages",
+        populate: {
+          path: "sender_id",
+          select: "-password -email -gender",
+        },
+        options: { sort: { createdAt: 1 } },
+      });
+
+    // If a matched chat is found, return it
+    if (matchedChat) {
+      return res.status(200).json(matchedChat);
+    }
+
+    // If no chat exists, create a new one
+    const newChat = new Chat({ users: [user_id, id], messages: [] });
+    await newChat.save();
+
+    // Return the newly created chat
+    const chatDetail = await Chat.findById(newChat._id).populate({
+      path: "users",
+      select: "-password -email -gender",
+    });
+
+    return res.status(201).json(chatDetail);
   }
   // [GET] /chat/all
   async getAll(req, res, next) {
