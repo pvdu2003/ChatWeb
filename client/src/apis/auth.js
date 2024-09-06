@@ -69,3 +69,21 @@ export const oathGoogle = async () => {
     console.log("Error when logging in using google");
   }
 };
+export const changePwd = async (email) => {
+  try {
+    const resp = await axios.post(`${api}/auth/forgot-password`, {
+      email,
+    });
+    const data = { data: resp.data, status: resp.status };
+    return data;
+  } catch (error) {
+    if (error.response) {
+      return {
+        message: error.response.data.message,
+        status: error.response.status,
+      };
+    } else {
+      console.error(error);
+    }
+  }
+};

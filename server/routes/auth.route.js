@@ -7,6 +7,7 @@ const authController = require("../controllers/auth.controller.js");
 const generateToken = require("../utils/generateToken.js");
 router.post("/login", authController.login);
 router.post("/signup", authController.signup);
+router.post("/forgot-password", authController.forgotPwd);
 // auth with google+
 router.get(
   "/google",

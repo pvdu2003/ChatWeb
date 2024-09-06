@@ -1,6 +1,9 @@
 const bcrypt = require("bcrypt");
+const nodemailer = require("nodemailer");
+require("dotenv").config();
 const User = require("../models/users.model.js");
 const generateToken = require("../utils/generateToken.js");
+const generatePwd = require("../utils/generatePwd.js");
 
 class authController {
   // [POST] /auth/login
@@ -88,6 +91,50 @@ class authController {
       res.status(200).json({ message: "Logged out successfully" });
     } catch (err) {
       next(err);
+    }
+  }
+  async forgotPwd(req, res, next) {
+    const email = req.body.email;
+    try {
+      const user = await User.findOne({ email });
+      if (!user) {
+        return res
+          .status(404)
+          .json({ message: "User not found! Use other email please!" });
+      }
+
+      const newPwd = generatePwd();
+
+      const hashedPwd = await bcrypt.hash(newPwd, 10);
+      user.password = hashedPwd;
+      await user.save();
+
+      // Send email with the new password
+      const transporter = nodemailer.createTransport({
+        service: "gmail",
+        host: "smtp.gmail.com",
+        port: 587,
+        secure: false,
+        auth: {
+          user: process.env.EMAIL,
+          pass: process.env.EMAIL_PASSWORD,
+        },
+      });
+
+      await transporter.sendMail({
+        from: process.env.EMAIL,
+        to: email,
+        subject: "Your New Password",
+        html: `<p>Your new password is: <strong>${newPwd}</strong></p>
+             <p>Please reset your password after logging in.</p>`,
+      });
+
+      res.status(200).json({
+        message: "New password sent to your email. Check your mail now!",
+      });
+    } catch (err) {
+      console.error("Error in forgot password handler", err);
+      res.status(500).json({ message: err });
     }
   }
 }
