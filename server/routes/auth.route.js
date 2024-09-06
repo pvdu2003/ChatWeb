@@ -5,9 +5,11 @@ require("dotenv").config();
 
 const authController = require("../controllers/auth.controller.js");
 const generateToken = require("../utils/generateToken.js");
+const authMiddleware = require("../middlewares/auth.middleware.js");
 router.post("/login", authController.login);
 router.post("/signup", authController.signup);
 router.post("/forgot-password", authController.forgotPwd);
+router.post("/change-password", authMiddleware, authController.changePwd);
 // auth with google+
 router.get(
   "/google",

@@ -5,6 +5,7 @@ import Login from "./pages/Login.jsx";
 import Signup from "./pages/Signup.jsx";
 import Chat from "./pages/Chat.jsx";
 import ForgotPwd from "./pages/ForgotPwd.jsx";
+import ChangePwd from "./pages/ChangePwd.jsx";
 import { useAuthContext } from "./context/AuthContext.jsx";
 function App() {
   const { authUser } = useAuthContext();
@@ -22,6 +23,10 @@ function App() {
         <Route
           path="/signup"
           element={authUser ? <Navigate to="/" /> : <Signup />}
+        />
+        <Route
+          path="/change-pwd"
+          element={authUser ? <ChangePwd /> : <Login />}
         />
         <Route path="/forgot-pwd" element={<ForgotPwd />} />
       </Routes>

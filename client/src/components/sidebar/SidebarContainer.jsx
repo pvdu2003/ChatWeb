@@ -4,6 +4,8 @@ import { Box, Paper } from "@mui/material";
 import SearchInput from "./search/SearchInput";
 import SearchResults from "./search/SearchResults";
 import ConversationList from "./conversation/ConversationList";
+import OptionDial from "./options/OptionDial";
+
 export default function SidebarContainer() {
   const [showResults, setShowResults] = useState(false);
   const resultsRef = useRef(null); // Create a ref for SearchResults
@@ -67,6 +69,7 @@ export default function SidebarContainer() {
         </Paper>
       )}
       <ConversationList />
+      <OptionDial />
     </Box>
   );
 }

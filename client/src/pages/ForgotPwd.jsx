@@ -15,7 +15,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-import { changePwd } from "../apis/auth";
+import { resetPwd } from "../apis/auth";
 
 function ForgotPwd() {
   const defaultTheme = createTheme();
@@ -30,7 +30,7 @@ function ForgotPwd() {
       toast.error("Please enter your email address", { autoClose: 2000 });
       return;
     }
-    const resp = await changePwd(email);
+    const resp = await resetPwd(email);
 
     if (resp.status === 200) {
       toast.success(resp.data.message, { autoClose: 1500 });

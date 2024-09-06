@@ -93,6 +93,7 @@ class authController {
       next(err);
     }
   }
+  // [POST] /auth/forgot-password
   async forgotPwd(req, res, next) {
     const email = req.body.email;
     try {
@@ -136,6 +137,47 @@ class authController {
       console.error("Error in forgot password handler", err);
       res.status(500).json({ message: err });
     }
+  }
+  // [POST] /auth/change-password
+  async changePwd(req, res, next) {
+    const { password, confirm_password } = req.body;
+    const user_id = req.user._id;
+    if (!password || !confirm_password) {
+      return res
+        .status(400)
+        .json({ message: "Please provide both password and confirm password" });
+    }
+    if (password.length < 6) {
+      return res
+        .status(400)
+        .json({ message: "Password must be more than 6 characters!" });
+    }
+
+    if (password !== confirm_password) {
+      return res.status(400).json({ message: "Passwords do not match!" });
+    }
+    const validUser = await User.findById(user_id);
+    if (!validUser) {
+      return res.status(401).json({ message: "Unauthorized! Invalid user" });
+    }
+
+    const comparePwd = await bcrypt.compare(validUser.password, password);
+    if (comparePwd) {
+      return res.status(400).json({ message: "Your password is not changed!" });
+    }
+    await bcrypt
+      .hash(password, 10)
+      .then((hashedPassword) => {
+        validUser.password = hashedPassword;
+        validUser.save();
+        res.status(200).json({ message: "Password changed successfully!" });
+      })
+      .catch((err) => {
+        console.error(err);
+        return res
+          .status(400)
+          .json({ message: "Error while changing password " + err.message });
+      });
   }
 }
 
