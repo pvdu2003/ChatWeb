@@ -1,9 +1,40 @@
+import { useEffect, useRef, useState } from "react";
 import PropTypes from "prop-types";
-
-import { List, Typography, Box, Divider } from "@mui/material";
+import { List, Typography, Box, Divider, IconButton } from "@mui/material";
+import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import MessageItem from "./MessageItem";
 
 export default function MessageList({ messages }) {
+  const chatContainerRef = useRef(null);
+  const [showScrollToBottom, setShowScrollToBottom] = useState(false);
+
+  useEffect(() => {
+    scrollToBottom();
+    return () => {
+      setShowScrollToBottom(false);
+    };
+  }, [messages]);
+
+  const scrollToBottom = () => {
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop =
+        chatContainerRef.current.scrollHeight;
+    }
+  };
+  const handleScroll = () => {
+    if (chatContainerRef.current) {
+      setShowScrollToBottom(
+        chatContainerRef.current.scrollTop + 1.5 <
+          chatContainerRef.current.scrollHeight -
+            chatContainerRef.current.clientHeight
+      );
+    }
+  };
+
+  const handleScrollToBottom = () => {
+    scrollToBottom();
+    setShowScrollToBottom(false);
+  };
   const formatMessages = () => {
     let groupedMessages = [];
     const currYear = new Date().getFullYear();
@@ -28,47 +59,70 @@ export default function MessageList({ messages }) {
   const groupedMessages = formatMessages();
 
   return (
-    <List
-      sx={{
-        flexGrow: 1,
-        overflow: "auto",
-        width: "100%",
-        maxHeight: "85vh",
-        mt: 2.4,
-      }}
-    >
-      {groupedMessages?.length === 0 ? (
-        <Box
+    <Box sx={{ position: "relative" }}>
+      <List
+        ref={chatContainerRef}
+        onScroll={handleScroll}
+        sx={{
+          flexGrow: 1,
+          overflow: "auto",
+          width: "100%",
+          maxHeight: "85vh",
+          mt: 2.4,
+        }}
+      >
+        {groupedMessages?.length === 0 ? (
+          <Box
+            sx={{
+              textAlign: "center",
+              color: "gray.200",
+              fontWeight: "bold",
+              gap: 1,
+            }}
+          >
+            <Typography variant="body1">
+              No messages in this chat! Send something to this user!
+            </Typography>
+          </Box>
+        ) : (
+          <>
+            {groupedMessages.map((formatMessage, id) => {
+              return (
+                <Box key={id}>
+                  <Divider>{formatMessage?.date}</Divider>
+                  {formatMessage?.messages?.map((message) => {
+                    return (
+                      <Box key={message._id}>
+                        <MessageItem message={message} />
+                      </Box>
+                    );
+                  })}
+                </Box>
+              );
+            })}
+          </>
+        )}
+      </List>
+      {showScrollToBottom && (
+        <IconButton
           sx={{
-            textAlign: "center",
-            color: "gray.200",
-            fontWeight: "bold",
-            gap: 1,
+            position: "absolute",
+            border: "1px solid #999",
+            bottom: "16px",
+            right: "50%",
+            zIndex: 1,
+            backgroundColor: "white",
+            "&:hover": {
+              backgroundColor: "#f1f1f1",
+            },
           }}
+          color="primary"
+          onClick={handleScrollToBottom}
         >
-          <Typography variant="body1">
-            No messages in this chat! Send something to this user!
-          </Typography>
-        </Box>
-      ) : (
-        <>
-          {groupedMessages.map((formatMessage, id) => {
-            return (
-              <Box key={id}>
-                <Divider>{formatMessage?.date}</Divider>
-                {formatMessage?.messages?.map((message) => {
-                  return (
-                    <Box key={message._id}>
-                      <MessageItem message={message} />
-                    </Box>
-                  );
-                })}
-              </Box>
-            );
-          })}
-        </>
+          <ArrowDownwardIcon />
+        </IconButton>
       )}
-    </List>
+    </Box>
   );
 }
 
