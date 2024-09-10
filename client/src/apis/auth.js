@@ -113,3 +113,20 @@ export const changePwd = async (password, confirm_password) => {
     }
   }
 };
+export const logout = async () => {
+  try {
+    const token = sessionStorage.getItem("token");
+    const resp = await API(token).post(`${api}/auth/logout`);
+
+    return { data: resp.data, status: resp.status };
+  } catch (error) {
+    if (error.response) {
+      return {
+        message: error.response.data.message,
+        status: error.response.status,
+      };
+    } else {
+      console.error(error);
+    }
+  }
+};
