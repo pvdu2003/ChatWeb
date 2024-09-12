@@ -7,6 +7,7 @@ import Chat from "./pages/Chat.jsx";
 import ForgotPwd from "./pages/ForgotPwd.jsx";
 import ChangePwd from "./pages/ChangePwd.jsx";
 import { useAuthContext } from "./context/AuthContext.jsx";
+import CreateChat from "./pages/CreateChat.jsx";
 function App() {
   const { authUser } = useAuthContext();
   return (
@@ -28,6 +29,7 @@ function App() {
           path="/change-pwd"
           element={authUser ? <ChangePwd /> : <Login />}
         />
+        <Route path="/create" element={authUser ? <CreateChat /> : <Login />} />
         <Route path="/forgot-pwd" element={<ForgotPwd />} />
       </Routes>
       <ToastContainer />

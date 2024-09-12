@@ -6,6 +6,7 @@ import {
   ListItemText,
   Typography,
   Badge,
+  AvatarGroup,
 } from "@mui/material";
 import { useAuthContext } from "../../../context/AuthContext";
 import { useChatContext } from "../../../context/ChatContext";
@@ -31,22 +32,39 @@ export default function ConversationItem({ chatId, users, lastMessage }) {
           onClick={clickHandler}
           sx={{ backgroundColor: isActive ? "#ecf4ffff" : "transparent" }}
         >
-          {isOnline ? (
-            <Badge
-              overlap="circular"
-              anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-              variant="dot"
-              color="success"
-            >
-              <Avatar src={receivers[0]?.avatar} />
-            </Badge>
+          {" "}
+          {receivers.length <= 1 ? (
+            <>
+              {isOnline ? (
+                <Badge
+                  overlap="circular"
+                  anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+                  variant="dot"
+                  color="success"
+                >
+                  <Avatar src={receivers[0]?.avatar} />
+                </Badge>
+              ) : (
+                <Avatar src={receivers[0]?.avatar} />
+              )}
+            </>
           ) : (
-            <Avatar src={receivers[0]?.avatar} />
+            <AvatarGroup max={2} spacing={"small"}>
+              {receivers.map((receiver, index) => (
+                <Avatar src={receiver.avatar} key={index} />
+              ))}
+            </AvatarGroup>
           )}
           <Box sx={{ paddingLeft: 1, flex: 1 }}>
             <ListItemText
               primary={
-                <span className="fw-bold">{receivers[0]?.full_name}</span>
+                <span className="fw-bold">
+                  {receivers.length <= 2
+                    ? receivers.map((receiver) => receiver.full_name).join(", ")
+                    : `${receivers[0].full_name},  ${
+                        receivers.length - 1
+                      } more`}
+                </span>
               }
               secondary={
                 <Typography

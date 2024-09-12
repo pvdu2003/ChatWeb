@@ -88,6 +88,42 @@ class chatController {
       console.error("Error in get all chat: " + error);
     }
   }
+  // [POST] /chat/create
+  async create(req, res, next) {
+    try {
+      const user_id = req.user._id;
+      const recipient_ids = req.body.recipientIds; // Expecting an array of recipient IDs
+
+      if (!Array.isArray(recipient_ids) || recipient_ids.length < 1) {
+        return res
+          .status(400)
+          .json({ message: "At least one recipient ID is required" });
+      }
+
+      // Check if the chat already exists
+      const chat = await Chat.findOne({
+        users: { $all: [user_id, ...recipient_ids] },
+        $expr: { $eq: [{ $size: "$users" }, recipient_ids.length + 1] }, // +1 for the current user
+      });
+      if (chat) {
+        return res.status(409).json({ message: "Chat already exists" });
+      }
+      const newChat = new Chat({
+        users: [user_id, ...recipient_ids],
+        messages: [],
+        group_admin: [user_id],
+      });
+      await newChat.save();
+      const chatDetail = await Chat.findById(newChat._id).populate({
+        path: "users",
+        select: "-password -email -gender",
+      });
+      res.status(201).json(chatDetail);
+    } catch (error) {
+      console.error("Error in create chat: " + error);
+      next(error);
+    }
+  }
 }
 
 module.exports = new chatController();

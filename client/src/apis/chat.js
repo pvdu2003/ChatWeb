@@ -24,3 +24,14 @@ export const getAll = async () => {
     console.error(error);
   }
 };
+export const createGroupChat = async (recipientIds) => {
+  try {
+    const token = sessionStorage.getItem("token");
+    const response = await API(token).post("/chat/create", { recipientIds });
+
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
