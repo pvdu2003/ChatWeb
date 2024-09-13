@@ -21,11 +21,13 @@ export default function MessageInput() {
     const handleReceiveMessage = (data) => {
       let chatDetail = data.message.chat;
       let senderInfo = data.message.getSender;
-      setMessages((prevMessages) => [...prevMessages, senderInfo]);
+      if (data.chatId === currChat) {
+        setMessages((prevMessages) => [...prevMessages, senderInfo]);
+      }
       if (
         !currChat ||
-        data.chatId !== currChat ||
-        (chatDetail.users.includes(authUser._id) &&
+        (data.chatId !== currChat &&
+          chatDetail.users.includes(authUser._id) &&
           senderInfo.sender_id._id !== authUser._id)
       ) {
         // Show notification for new messages in other chats
@@ -41,14 +43,13 @@ export default function MessageInput() {
       socket.off("receiveMessage", handleReceiveMessage);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [socket, messages]);
+  }, [socket, messages, currChat]);
   const handleSendMessage = async (e) => {
     e.preventDefault();
     if (message.trim()) {
       try {
         // Save the message to the database
         const savedMessage = await sendMessage(currChat, message);
-        console.log(savedMessage);
 
         // Emit the message only after it's saved
         socket.emit("sendMessage", {
@@ -89,6 +90,7 @@ export default function MessageInput() {
 
       <Button
         variant="contained"
+        type="submit"
         endIcon={<SendIcon />}
         onClick={handleSendMessage}
       >

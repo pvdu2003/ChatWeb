@@ -16,7 +16,15 @@ export default function MessageItem({ message }) {
           container
           justifyContent={!fromMe ? "flex-start" : "flex-end"}
         >
-          <Tooltip title={formattedTime} arrow placement="left">
+          <Tooltip
+            title={
+              !fromMe
+                ? `By ${message.sender_id.full_name} at ${formattedTime}`
+                : `At ${formattedTime}`
+            }
+            arrow
+            placement="left"
+          >
             <Box
               sx={{
                 backgroundColor: !fromMe ? "pink" : "blue",

@@ -2,8 +2,11 @@ import { Box } from "@mui/material";
 import { useEffect, useState } from "react";
 import { getAll } from "../../../apis/chat";
 import ConversationItem from "./ConversationItem";
+import { useSocketContext } from "../../../context/SocketContext";
 
 export default function ConversationList() {
+  const { socket } = useSocketContext();
+
   const [list, setList] = useState([]);
   const fetchAllChat = async () => {
     try {
@@ -15,7 +18,16 @@ export default function ConversationList() {
   };
   useEffect(() => {
     fetchAllChat();
-  }, []);
+    if (socket) {
+      socket.on("receiveMessage", fetchAllChat);
+    }
+
+    return () => {
+      if (socket) {
+        socket.off("receiveMessage", fetchAllChat);
+      }
+    };
+  }, [socket]);
   return (
     <Box
       sx={{
