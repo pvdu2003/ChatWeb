@@ -12,6 +12,11 @@ import {
   ListItemText,
   Avatar,
   Badge,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
 } from "@mui/material";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import { toast } from "react-toastify";
@@ -22,7 +27,7 @@ import { createGroupChat } from "../apis/chat";
 import { useSocketContext } from "../context/SocketContext";
 import { useChatContext } from "../context/ChatContext";
 
-const CreateChat = () => {
+const ManageChat = () => {
   const navigate = useNavigate();
 
   const [allUsers, setAllUsers] = useState([]); // All users from the system
@@ -31,16 +36,31 @@ const CreateChat = () => {
   const { setCurrChat, selectedUsers, setSelectedUsers } = useChatContext();
   const { onlineUsers } = useSocketContext();
 
+  const [openModal, setOpenModal] = useState(false);
+  const [userIdToRemove, setUserIdToRemove] = useState(null);
+  const [userToRemove, setUserToRemove] = useState(null);
+
+  const handleRemoveUser = (userId) => {
+    const user = allUsers.find((u) => u._id === userId);
+    setUserIdToRemove(userId);
+    setUserToRemove(user);
+    setOpenModal(true);
+  };
+
+  const handleConfirmRemove = () => {
+    setSelectedUsers((prev) => prev.filter((id) => id !== userIdToRemove));
+    setOpenModal(false);
+  };
+
+  const handleCancelRemove = () => {
+    setOpenModal(false);
+  };
+
   // Fetch all users when the component mounts
   useEffect(() => {
     const fetchAllUsers = async () => {
       try {
-        let users;
-        //   if (query) {
-        //     users = await getAll(query);
-        //   } else {
-        users = await getAll();
-        //   }
+        let users = await getAll();
         setAllUsers(users);
         setFilteredUsers(users);
       } catch (error) {
@@ -105,7 +125,7 @@ const CreateChat = () => {
 
   return (
     <Box component="form" onSubmit={handleSubmit} sx={{ padding: 2 }}>
-      <Typography variant="h6">Create Group Chat</Typography>
+      <Typography variant="h6">Update Group Chat</Typography>
       <TextField
         label="Search Users"
         variant="outlined"
@@ -156,7 +176,7 @@ const CreateChat = () => {
               overlap="circular"
               badgeContent={
                 <IconButton
-                  onClick={() => toggleUserSelection(userId)}
+                  onClick={() => handleRemoveUser(userId)}
                   sx={{ padding: 0, color: "error.main" }}
                 >
                   <RemoveCircleOutlineIcon fontSize="small" />
@@ -168,6 +188,30 @@ const CreateChat = () => {
           );
         })}
       </List>
+      <Dialog
+        open={openModal}
+        onClose={handleCancelRemove}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          {`Remove ${userToRemove?.full_name} from Chat?`}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Are you sure you want to remove {userToRemove?.full_name} from the
+            chat?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCancelRemove} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleConfirmRemove} color="primary" autoFocus>
+            Confirm
+          </Button>
+        </DialogActions>
+      </Dialog>
 
       <Button
         type="submit"
@@ -175,7 +219,7 @@ const CreateChat = () => {
         color="primary"
         sx={{ marginTop: 2 }}
       >
-        Create Group Chat
+        Update Chat
       </Button>
       <Button
         variant="outlined"
@@ -191,4 +235,4 @@ const CreateChat = () => {
   );
 };
 
-export default CreateChat;
+export default ManageChat;
