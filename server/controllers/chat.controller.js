@@ -124,6 +124,44 @@ class chatController {
       next(error);
     }
   }
+  // [PATCH] /chat/update/:id
+  async update(req, res, next) {
+    try {
+      const chat_id = req.params.id;
+      const user_id = req.user._id;
+      const { users, admins } = req.body;
+      const chat = await Chat.findById(chat_id);
+      if (!chat) {
+        return res.status(404).json({ message: "Chat not found" });
+      }
+      if (!chat.users.includes(user_id)) {
+        return res
+          .status(403)
+          .json({ message: "Unauthorized to update this chat" });
+      }
+      if (!chat.group_admin.includes(user_id)) {
+        return res
+          .status(404)
+          .json({ message: "You are not admin of this chat!" });
+      }
+
+      if (users) {
+        chat.users = [...users, user_id]; // Set the users to the new array from the request
+      }
+
+      if (admins) {
+        chat.group_admin = [...admins, user_id]; // Set admins to the new array from the request
+      }
+
+      // Save the updated chat
+      const updated_chat = await chat.save();
+
+      return res.status(200).json(updated_chat);
+    } catch (error) {
+      console.error("Error in updating chat: " + error);
+      next(error);
+    }
+  }
 }
 
 module.exports = new chatController();
