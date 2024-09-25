@@ -10,6 +10,8 @@ import NoChatSelected from "./NoChatSelected";
 
 export default function MessageContainer() {
   const [users, setUsers] = useState([]);
+  const [admins, setAdmins] = useState([]);
+
   const { currChat, messages, setMessages } = useChatContext();
 
   const fetchChat = async () => {
@@ -17,6 +19,7 @@ export default function MessageContainer() {
     try {
       const data = await getById(currChat);
       setUsers(data.users);
+      setAdmins(data.group_admin);
       setMessages(data.messages);
     } catch (error) {
       console.error(error);
@@ -39,7 +42,7 @@ export default function MessageContainer() {
             px: 2,
           }}
         >
-          <MessageHeader users={users} />
+          <MessageHeader users={users} admins={admins} />
           <Box
             sx={{
               flexGrow: 1,

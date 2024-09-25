@@ -31,7 +31,10 @@ function App() {
           element={authUser ? <ChangePwd /> : <Login />}
         />
         <Route path="/create" element={authUser ? <CreateChat /> : <Login />} />
-        <Route path="/manage" element={authUser ? <ManageChat /> : <Login />} />
+        <Route
+          path="/manage/:id"
+          element={authUser ? <ManageChat /> : <Login />}
+        />
         <Route path="/forgot-pwd" element={<ForgotPwd />} />
       </Routes>
       <ToastContainer />

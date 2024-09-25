@@ -18,12 +18,13 @@ import { useAuthContext } from "../../context/AuthContext";
 import { useSocketContext } from "../../context/SocketContext";
 import { useChatContext } from "../../context/ChatContext";
 
-export default function MessageHeader({ users }) {
+export default function MessageHeader({ users, admins }) {
   const { authUser } = useAuthContext();
   const { onlineUsers } = useSocketContext();
-  const { setSelectedUsers } = useChatContext();
+  const { setSelectedUsers, currChat } = useChatContext();
 
   const receivers = users?.filter((user) => user._id !== authUser._id);
+  const isAdmin = admins?.includes(authUser._id);
 
   const [open, setOpen] = useState(false);
 
@@ -102,9 +103,11 @@ export default function MessageHeader({ users }) {
             <p className="m-0 fw-bold">No recipients</p>
           </Box>
         )}
-        <IconButton onClick={handleToggle}>
-          <MoreVertIcon sx={{ cursor: "pointer" }} />
-        </IconButton>
+        {isAdmin && (
+          <IconButton onClick={handleToggle}>
+            <MoreVertIcon sx={{ cursor: "pointer" }} />
+          </IconButton>
+        )}
       </Paper>
 
       <Collapse in={open}>
@@ -129,7 +132,9 @@ export default function MessageHeader({ users }) {
             </List>
           ) : (
             <List>
-              <MenuItem onClick={() => handleMenuItemClick("manage")}>
+              <MenuItem
+                onClick={() => handleMenuItemClick(`manage/${currChat}`)}
+              >
                 Manage chat
               </MenuItem>
             </List>
@@ -149,4 +154,5 @@ MessageHeader.propTypes = {
       avatar: PropTypes.string,
     })
   ),
+  admins: PropTypes.arrayOf(PropTypes.string),
 };

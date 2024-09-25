@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 import {
   Box,
@@ -23,15 +23,17 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import { getAll } from "../apis/user";
-import { createGroupChat } from "../apis/chat";
+import { updateGroupChat } from "../apis/chat";
 import { useSocketContext } from "../context/SocketContext";
 import { useChatContext } from "../context/ChatContext";
 
 const ManageChat = () => {
   const navigate = useNavigate();
+  const { id } = useParams();
 
   const [allUsers, setAllUsers] = useState([]); // All users from the system
-  const [filteredUsers, setFilteredUsers] = useState([]); // Users based on search input
+  const [filteredUsers, setFilteredUsers] = useState([]);
+
   const [searchTerm, setSearchTerm] = useState(""); // Search input
   const { setCurrChat, selectedUsers, setSelectedUsers } = useChatContext();
   const { onlineUsers } = useSocketContext();
@@ -103,8 +105,8 @@ const ManageChat = () => {
       return;
     }
     try {
-      const response = await createGroupChat(selectedUsers);
-      toast.success("Create chat successfully!!!", { autoClose: 1500 });
+      const response = await updateGroupChat(selectedUsers, id);
+      toast.success("Update chat successfully!!!", { autoClose: 1500 });
       setCurrChat(response._id);
       setTimeout(() => {
         navigate("/");

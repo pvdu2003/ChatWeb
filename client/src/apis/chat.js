@@ -27,8 +27,22 @@ export const getAll = async () => {
 export const createGroupChat = async (recipientIds) => {
   try {
     const token = sessionStorage.getItem("token");
-    const response = await API(token).post("/chat/create", { recipientIds });
+    const response = await API(token).post("/chat/create", {
+      recipientIds,
+    });
 
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+export const updateGroupChat = async (recipientIds, id) => {
+  try {
+    const token = sessionStorage.getItem("token");
+    const response = await API(token).patch(`/chat/update/${id}`, {
+      users: recipientIds,
+    });
     return response.data;
   } catch (error) {
     console.error(error);
