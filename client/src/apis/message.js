@@ -20,3 +20,14 @@ export const sendMessage = async (currChat, message) => {
     console.error(error);
   }
 };
+export const deleteMessage = async (messageId) => {
+  try {
+    const token = sessionStorage.getItem("token");
+    const response = await API(token).delete(`/message/${messageId}`);
+    console.log(response);
+
+    return response;
+  } catch (error) {
+    console.error(error);
+  }
+};

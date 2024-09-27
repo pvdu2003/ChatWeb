@@ -5,5 +5,6 @@ const messageController = require("../controllers/message.controller.js");
 const authMiddleware = require("../middlewares/auth.middleware.js");
 
 router.post("/send", authMiddleware, messageController.sendHandler);
+router.delete("/:id", authMiddleware, messageController.deleteHandler);
 
 module.exports = router;

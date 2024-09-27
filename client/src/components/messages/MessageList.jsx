@@ -3,9 +3,11 @@ import PropTypes from "prop-types";
 import { List, Typography, Box, Divider, IconButton } from "@mui/material";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import MessageItem from "./MessageItem";
+import { useChatContext } from "../../context/ChatContext";
 
 export default function MessageList({ messages }) {
   const chatContainerRef = useRef(null);
+  const { setMessages } = useChatContext();
   const [showScrollToBottom, setShowScrollToBottom] = useState(false);
 
   useEffect(() => {
@@ -58,6 +60,11 @@ export default function MessageList({ messages }) {
   };
   const groupedMessages = formatMessages();
 
+  const handleDeleteMessage = (id) => {
+    setMessages((prevMessages) =>
+      prevMessages.filter((message) => message._id !== id)
+    );
+  };
   return (
     <Box sx={{ position: "relative" }}>
       <List
@@ -93,7 +100,10 @@ export default function MessageList({ messages }) {
                   {formatMessage?.messages?.map((message) => {
                     return (
                       <Box key={message._id}>
-                        <MessageItem message={message} />
+                        <MessageItem
+                          message={message}
+                          onDelete={handleDeleteMessage}
+                        />
                       </Box>
                     );
                   })}
