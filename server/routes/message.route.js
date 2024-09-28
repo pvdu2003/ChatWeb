@@ -6,5 +6,6 @@ const authMiddleware = require("../middlewares/auth.middleware.js");
 
 router.post("/send", authMiddleware, messageController.sendHandler);
 router.delete("/:id", authMiddleware, messageController.deleteHandler);
+router.patch("/:id", authMiddleware, messageController.updateHandler);
 
 module.exports = router;

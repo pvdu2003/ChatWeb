@@ -65,6 +65,13 @@ export default function MessageList({ messages }) {
       prevMessages.filter((message) => message._id !== id)
     );
   };
+  const handleUpdateMessage = (updatedMessage) => {
+    setMessages((prevMessages) =>
+      prevMessages.map((message) =>
+        message._id === updatedMessage._id ? updatedMessage : message
+      )
+    );
+  };
   return (
     <Box sx={{ position: "relative" }}>
       <List
@@ -103,6 +110,7 @@ export default function MessageList({ messages }) {
                         <MessageItem
                           message={message}
                           onDelete={handleDeleteMessage}
+                          onUpdate={handleUpdateMessage}
                         />
                       </Box>
                     );

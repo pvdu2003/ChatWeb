@@ -31,3 +31,16 @@ export const deleteMessage = async (messageId) => {
     console.error(error);
   }
 };
+export const updateMessage = async (messageId, newMessage) => {
+  try {
+    const token = sessionStorage.getItem("token");
+    const response = await API(token).patch(`/message/${messageId}`, {
+      message: newMessage,
+    });
+    console.log(response);
+
+    return response;
+  } catch (error) {
+    console.error(error);
+  }
+};

@@ -45,6 +45,17 @@ class messageController {
       console.log(err);
     }
   }
+  // [PATCH] /message/:id
+  async updateHandler(req, res, next) {
+    try {
+      const { id } = req.params;
+      const { message } = req.body;
+      await Message.findByIdAndUpdate(id, { message }, { new: true });
+      res.status(200).json({ message: "Message updated successfully" });
+    } catch (err) {
+      console.log(err);
+    }
+  }
 }
 
 module.exports = new messageController();
