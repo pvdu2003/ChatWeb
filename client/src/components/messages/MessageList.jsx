@@ -4,10 +4,12 @@ import { List, Typography, Box, Divider, IconButton } from "@mui/material";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import MessageItem from "./MessageItem";
 import { useChatContext } from "../../context/ChatContext";
+import { useAuthContext } from "../../context/AuthContext";
 
 export default function MessageList({ messages }) {
   const chatContainerRef = useRef(null);
   const { setMessages } = useChatContext();
+  const { authUser } = useAuthContext();
   const [showScrollToBottom, setShowScrollToBottom] = useState(false);
 
   useEffect(() => {
@@ -38,25 +40,34 @@ export default function MessageList({ messages }) {
     setShowScrollToBottom(false);
   };
   const formatMessages = () => {
-    let groupedMessages = [];
-    const currYear = new Date().getFullYear();
+    const groupedMessages = {};
+
     messages.forEach((msg) => {
       const date = new Date(msg.createdAt);
-      let msgDate = date.toDateString();
-      const msgYear = date.getFullYear();
-      if (msgYear === currYear) {
-        msgDate = msgDate.split(" ").slice(0, 3).join(" ");
+      const dateString = date.toDateString();
+      const senderId = msg.sender_id._id;
+
+      // Initialize date group if it doesn't exist
+      if (!groupedMessages[dateString]) {
+        groupedMessages[dateString] = {};
       }
 
-      const lastGroup = groupedMessages[groupedMessages.length - 1];
-
-      if (!lastGroup || lastGroup.date !== msgDate || msgYear !== currYear) {
-        groupedMessages.push({ date: msgDate, messages: [msg] });
-      } else {
-        lastGroup.messages.push(msg);
+      // Initialize sender group if it doesn't exist
+      if (!groupedMessages[dateString][senderId]) {
+        groupedMessages[dateString][senderId] = {
+          sender_id: msg.sender_id,
+          messages: [],
+        };
       }
+      // Add the message to the sender's group
+      groupedMessages[dateString][senderId].messages.push(msg);
     });
-    return groupedMessages;
+
+    // Convert the object into an array
+    return Object.entries(groupedMessages).map(([date, senders]) => ({
+      date,
+      senders: Object.values(senders),
+    }));
   };
   const groupedMessages = formatMessages();
 
@@ -85,7 +96,7 @@ export default function MessageList({ messages }) {
           mt: 2.4,
         }}
       >
-        {groupedMessages?.length === 0 ? (
+        {groupedMessages.length === 0 ? (
           <Box
             sx={{
               textAlign: "center",
@@ -100,24 +111,28 @@ export default function MessageList({ messages }) {
           </Box>
         ) : (
           <>
-            {groupedMessages.map((formatMessage, id) => {
-              return (
-                <Box key={id}>
-                  <Divider>{formatMessage?.date}</Divider>
-                  {formatMessage?.messages?.map((message) => {
-                    return (
-                      <Box key={message._id}>
-                        <MessageItem
-                          message={message}
-                          onDelete={handleDeleteMessage}
-                          onUpdate={handleUpdateMessage}
-                        />
-                      </Box>
-                    );
-                  })}
-                </Box>
-              );
-            })}
+            {groupedMessages.map((group, idx) => (
+              <Box key={idx} sx={{ margin: "10px 0" }}>
+                <Divider>{group.date}</Divider>
+                {group.senders.map((sender, senderIdx) => (
+                  <Box key={senderIdx} sx={{ margin: "10px 0" }}>
+                    {sender.messages.map((message) => (
+                      <MessageItem
+                        key={message._id}
+                        message={message}
+                        onDelete={handleDeleteMessage}
+                        onUpdate={handleUpdateMessage}
+                      />
+                    ))}
+                    {sender.sender_id._id != authUser._id && (
+                      <Typography variant="caption" sx={{ color: "gray" }}>
+                        {sender.sender_id.full_name}
+                      </Typography>
+                    )}
+                  </Box>
+                ))}
+              </Box>
+            ))}
           </>
         )}
       </List>
@@ -147,11 +162,15 @@ export default function MessageList({ messages }) {
 MessageList.propTypes = {
   messages: PropTypes.arrayOf(
     PropTypes.shape({
-      _id: PropTypes.string,
-      sender_id: PropTypes.object,
-      message: PropTypes.string,
-      createdAt: PropTypes.string,
-      updatedAt: PropTypes.string,
+      _id: PropTypes.string.isRequired,
+      sender_id: PropTypes.shape({
+        _id: PropTypes.string.isRequired,
+        full_name: PropTypes.string.isRequired,
+        avatar: PropTypes.string,
+      }).isRequired,
+      message: PropTypes.string.isRequired,
+      createdAt: PropTypes.string.isRequired,
+      updatedAt: PropTypes.string.isRequired,
     })
   ),
 };
