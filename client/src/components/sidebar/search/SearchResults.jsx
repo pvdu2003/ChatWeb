@@ -43,9 +43,7 @@ export default function SearchResults({ query, setShowResults }) {
             {users.map((user) => (
               <SearchResult
                 key={user._id}
-                id={user._id}
-                avatar={user.avatar}
-                full_name={user.full_name}
+                user={user}
                 setShowResults={setShowResults}
               />
             ))}

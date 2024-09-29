@@ -29,6 +29,7 @@ class chatController {
     // If not found, check for an existing chat between the two users
     const matchedChat = await Chat.findOne({
       users: { $all: [user_id, id] },
+      $expr: { $eq: [{ $size: "$users" }, 2] },
     })
       .populate({
         path: "users",

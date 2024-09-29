@@ -11,6 +11,7 @@ class messageController {
       if (!chat) {
         chat = await Chat.findOne({
           users: { $all: [sender_id, id] },
+          $expr: { $eq: [{ $size: "$users" }, 2] },
         });
         if (!chat) {
           chat = new Chat({
